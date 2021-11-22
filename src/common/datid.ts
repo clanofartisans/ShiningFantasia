@@ -1,3 +1,7 @@
+export abstract class CommonConstants {
+    static readonly chocoboNames: number = 0xd8b2;
+}
+
 export abstract class EnglishConstants {
     static readonly zoneNames: number = 0xd8a9;
 }
