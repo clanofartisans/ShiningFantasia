@@ -1,3 +1,5 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { Buffer } from 'buffer';
 import { createApp } from 'vue';
 
