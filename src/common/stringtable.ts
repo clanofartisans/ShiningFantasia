@@ -3,12 +3,25 @@ import iconv from 'iconv-lite';
 import { lsb32 } from './bytes';
 
 export class StringTable {
+    // header magic is 64 5F 6D 73 67 00 00 00 (d_msg)
+    static readonly magic = new Uint8Array([0x64, 0x5f, 0x6d, 0x73, 0x67, 0x00, 0x00, 0x00]);
+
     entries: string[];
 
     constructor(b: Buffer) {
         this.entries = [];
 
-        // header magic is 64 5F 6D 73 67 00 00 00 (d_msg)
+        if (b.length < StringTable.magic.length) {
+            throw new Error('buffer too small');
+        }
+
+        if (b.compare(StringTable.magic, 0, StringTable.magic.length, 0, StringTable.magic.length) !== 0) {
+            throw new Error('not a StringTable');
+        }
+
+        if (b.length < 64) {
+            throw new Error('StringTable truncated');
+        }
 
         for (let i = 64; i < b.length; i++) {
             b[i] = b[i] ^ 0xff;

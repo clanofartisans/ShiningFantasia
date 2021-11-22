@@ -42,5 +42,15 @@ export async function getUniqueId(fileId: number): Promise<number> {
 
 export async function loadStringTable(fileId: number): Promise<StringTable> {
     const buf = Buffer.from(await readFile(fileId));
-    return new StringTable(buf);
+
+    try {
+        return new StringTable(buf);
+    } catch (e) {
+        console.error(`${fileId}: Exception ${e}`);
+
+        // print out the first 256 bytes
+        dumpBin(buf.slice(0, 256));
+
+        throw e;
+    }
 }
