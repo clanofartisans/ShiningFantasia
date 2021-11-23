@@ -15,6 +15,10 @@ contextBridge.exposeInMainWorld(
             return ipcRenderer.invoke('get-unique-id', fileId);
         },
 
+        getFileName: (fileId: number) => {
+            return ipcRenderer.invoke('get-file-name', fileId);
+        },
+
         readResource: (fileId: number) => {
             return ipcRenderer.invoke('read-resource', fileId);
         },

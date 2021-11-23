@@ -60,12 +60,20 @@ class FileTable {
         return 0;
     }
 
-    getFileName(fileId: number): string | null{
+    getBaseFileName(fileId: number): string | null {
         if (this.table.length > fileId) {
             const {ROM, Index} = this.table[fileId];
             if (ROM != 0) {
-                return path.join(this.basePath, ROM === 1 ? `ROM/${Index >> 7}/${Index & 0x7f}.DAT` : `ROM${ROM}/${Index >> 7}/${Index & 0x7f}.DAT`);
+                return ROM === 1 ? `ROM/${Index >> 7}/${Index & 0x7f}.DAT` : `ROM${ROM}/${Index >> 7}/${Index & 0x7f}.DAT`;
             }
+        }
+        return null;
+    }
+
+    getFileName(fileId: number): string | null {
+        const baseFileName = this.getBaseFileName(fileId);
+        if (baseFileName) {
+            return path.join(this.basePath, baseFileName);
         }
         return null;
     }
@@ -119,6 +127,10 @@ export class DatReader {
 
     getUniqueId(fileId: number) : number {
         return this.fileTable.getUniqueId(fileId);
+    }
+
+    getBaseFileName(fileId: number) : string | null {
+        return this.fileTable.getBaseFileName(fileId);
     }
 
     getFileName(fileId: number) : string | null {

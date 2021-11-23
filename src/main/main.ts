@@ -48,6 +48,21 @@ ipcMain.handle('get-unique-id', async (event, fileId) => {
     return 0;
 });
 
+ipcMain.handle('get-file-name', async (event, fileId) => {
+    if (datReader) {
+        const baseFileName = datReader.getBaseFileName(fileId);
+        const fileName = datReader.getFileName(fileId);
+
+        if (fileName) {
+            return {
+                baseFileName,
+                fileName,
+            }
+        }
+    }
+    return null;
+});
+
 ipcMain.handle('read-resource', async (event, fileId) => {
     if (datReader) {
         return datReader.readFile(fileId);

@@ -40,6 +40,10 @@ export async function getUniqueId(fileId: number): Promise<number> {
     return window.ipcApi.getUniqueId(fileId);
 }
 
+export async function getFileName(fileId: number): Promise<GetFileNameResult | null> {
+    return window.ipcApi.getFileName(fileId);
+}
+
 export async function loadStringTable(fileId: number): Promise<StringTable> {
     const buf = Buffer.from(await readFile(fileId));
 
