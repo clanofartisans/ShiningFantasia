@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const PurgeCSSPlugin = require('purgecss-webpack-plugin');
@@ -109,6 +110,11 @@ function getTarget({ production, target, entry, output, templates, tsconfig }) {
     if (target === 'electron-renderer' || target === 'web') {
         t.plugins = [
             new webpack.ProgressPlugin(),
+            new CopyPlugin({
+                patterns: [
+                    { from: `${path.resolve(__dirname, './src/resources/icon.png')}`, to: `${path.resolve(__dirname, './build/icon.png')}` },
+                ],
+            }),
             ...getHtmlPlugins(production, templates),
             new MiniCssExtractPlugin(),
             new PurgeCSSPlugin({

@@ -14,7 +14,8 @@ app.on('ready', () => {
             nodeIntegration: false,
             contextIsolation: true,
             preload: path.join(__dirname, '../preload/preload.js'),
-        }
+        },
+        icon: path.join(__dirname, '../icon.png'),
     });
 
     mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
