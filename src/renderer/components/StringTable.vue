@@ -1,5 +1,6 @@
 <template>
     <button @click.prevent="goBack">Go Back</button>
+    <div>{{ fileId }} - {{ baseFileName }}</div>
     <table>
         <thead>
             <tr>
@@ -17,11 +18,18 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { loadStringTable } from '../../common/datloader';
+import { getFileName, loadStringTable } from '../../common/datloader';
 
 export default defineComponent({
     created() {
-        loadStringTable(this.fileId)
+        getFileName(this.fileId)
+            .then(fileName => {
+                if (fileName) {
+                    this.baseFileName = fileName.baseFileName;
+                    this.fileName = fileName.fileName;
+                }
+                return loadStringTable(this.fileId);
+            })
             .then(st => {
                 console.log(`${this.fileId}: Found ${st.entries.length} strings.`);
                 this.entries = st.entries;
@@ -31,8 +39,18 @@ export default defineComponent({
             });
     },
 
+    props: {
+        fileId: {
+            type: Number,
+            default: null,
+        },
+    },
+
     data() {
         return {
+            baseFileName: '' as string,
+            fileName: '' as string,
+
             entries: [] as string[],
         }
     },
@@ -44,13 +62,6 @@ export default defineComponent({
     methods: {
         goBack() {
             this.$emit('goBack');
-        },
-    },
-
-    props: {
-        fileId: {
-            type: Number,
-            default: null,
         },
     },
 });
