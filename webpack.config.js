@@ -1,7 +1,9 @@
 const glob = require('glob');
 const path = require('path');
+const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const PurgeCSSPlugin = require('purgecss-webpack-plugin');
@@ -94,7 +96,9 @@ function getTarget({ production, target, entry, output, templates, tsconfig }) {
                 }
             ]
         },
-        plugins: [],
+        plugins: [
+            new webpack.ProgressPlugin(),
+        ],
         devtool: 'source-map',
     };
 
@@ -104,6 +108,7 @@ function getTarget({ production, target, entry, output, templates, tsconfig }) {
 
     if (target === 'electron-renderer' || target === 'web') {
         t.plugins = [
+            new webpack.ProgressPlugin(),
             ...getHtmlPlugins(production, templates),
             new MiniCssExtractPlugin(),
             new PurgeCSSPlugin({
@@ -125,13 +130,40 @@ function getTarget({ production, target, entry, output, templates, tsconfig }) {
 
 module.exports = function (env, argv) {
     const production = argv.mode == 'production';
+    const distBuild = env['dist-build'];
 
-    return [
+    const targets = [
+        // clear out the build directory
+        {
+            output: {
+                path: path.resolve(__dirname, 'build'),
+            },
+            entry: {},
+            plugins: [
+                new CleanWebpackPlugin(),
+            ],
+        }
+    ];
+
+    if (distBuild) {
+        // clear out the dist directory
+        targets.push({
+            output: {
+                path: path.resolve(__dirname, 'dist'),
+            },
+            entry: {},
+            plugins: [
+                new CleanWebpackPlugin(),
+            ],
+        });
+    }
+
+    return targets.concat([
         getTarget({
             production,
             target: 'electron-main',
             entry: {main: './src/main/main.ts'},
-            output: {path: path.resolve(__dirname, './dist/main/')},
+            output: {path: path.resolve(__dirname, './build/main/')},
             templates: null,
             tsconfig: path.resolve(__dirname, './tsconfig.json')
         }),
@@ -139,7 +171,7 @@ module.exports = function (env, argv) {
             production,
             target: 'electron-preload',
             entry: {preload: './src/preload/preload.ts'},
-            output: {path: path.resolve(__dirname, './dist/preload/')},
+            output: {path: path.resolve(__dirname, './build/preload/')},
             templates: null,
             tsconfig: path.resolve(__dirname, './tsconfig.preload.json')
         }),
@@ -149,7 +181,7 @@ module.exports = function (env, argv) {
             // nodeIntegration is turned off.
             target: 'web',
             entry: {index: './src/renderer/renderer.ts'},
-            output: {path: path.resolve(__dirname, './dist/renderer/')},
+            output: {path: path.resolve(__dirname, './build/renderer/')},
             templates: [
                 {
                     entry: ['index'],
@@ -159,5 +191,5 @@ module.exports = function (env, argv) {
             ],
             tsconfig: path.resolve(__dirname, './tsconfig.renderer.json')
         }),
-    ];
+    ]);
 }
