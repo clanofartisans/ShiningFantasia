@@ -5,7 +5,10 @@
     </template>
 
     <template v-if="selectResource">
-        <SelectResource @set-file-id="setFileId" />
+        <SelectResource
+            @set-file-id="setFileId"
+            :defaultFileId="fileId"
+        />
     </template>
 
     <template v-if="stringTable">

@@ -127,12 +127,14 @@ export default defineComponent({
             { fileId: 0x10B9F, description: '<Unknown>' },
             { fileId: 0x14E57, description: '<Unknown>' },
         ];
+
+        this.fileId = this.defaultFileId;
     },
 
     data() {
         return {
             resourceList: [] as {fileId: number, description: string}[],
-            fileId: null,
+            fileId: null as number | null,
         }
     },
 
@@ -143,6 +145,13 @@ export default defineComponent({
     methods: {
         setFileId() {
             this.$emit('setFileId', this.fileId);
+        },
+    },
+
+    props: {
+        defaultFileId: {
+            type: Number,
+            default: null,
         },
     },
 });
