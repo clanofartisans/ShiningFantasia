@@ -1,4 +1,5 @@
-import { Dmsg } from './resources';
+import { ResourceEntry, ResourceType } from './database';
+import { Resource, Dmsg, EventMessage } from './resources';
 
 export function dumpBin(b: Buffer) {
     let addr = 0;
@@ -49,6 +50,56 @@ export async function loadDmsg(fileId: number): Promise<Dmsg> {
 
     try {
         return new Dmsg(buf);
+    } catch (e) {
+        console.error(`${fileId}: Exception ${e}`);
+
+        // print out the first 256 bytes
+        dumpBin(buf.slice(0, 256));
+
+        throw e;
+    }
+}
+
+export async function loadEventMessage(fileId: number): Promise<EventMessage> {
+    const buf = Buffer.from(await readFile(fileId));
+
+    try {
+        return new EventMessage(buf);
+    } catch (e) {
+        console.error(`${fileId}: Exception ${e}`);
+
+        // print out the first 256 bytes
+        dumpBin(buf.slice(0, 256));
+
+        throw e;
+    }
+}
+
+function getConstructor(entry: ResourceEntry) {
+    switch (entry.type) {
+        case ResourceType.Dmsg:
+        default:
+            return Dmsg;
+        case ResourceType.EventMessage:
+            return EventMessage;
+    }
+}
+
+export async function loadResource(entry: ResourceEntry): Promise<Resource> {
+    const constructor = getConstructor(entry);
+
+    const fileId = entry.fileId as number;
+
+    const fileName = await getFileName(fileId);
+    entry.fileName = {
+        baseName: fileName!.baseFileName,
+        fileName: fileName!.fileName,
+    };
+
+    const buf = Buffer.from(await readFile(fileId));
+
+    try {
+        return new constructor(buf);
     } catch (e) {
         console.error(`${fileId}: Exception ${e}`);
 

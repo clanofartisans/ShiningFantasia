@@ -20,13 +20,13 @@ import { defineComponent, PropType } from 'vue';
 
 import { ResourceEntry } from '../../common/database';
 import { loadResource } from '../../common/datloader';
-import { Dmsg } from '../../common/resources';
+import { EventMessage } from '../../common/resources';
 
 export default defineComponent({
     created() {
         loadResource(this.entry)
             .then(r_ => {
-                const r = r_ as Dmsg;
+                const r = r_ as EventMessage;
                 console.log(`${this.entry.fileId}: Found ${r.entries.length} strings.`);
                 this.entries = r.entries;
             })

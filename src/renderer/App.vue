@@ -6,27 +6,37 @@
 
     <template v-if="selectResource">
         <SelectResource
-            @set-file-id="setFileId"
-            :defaultFileId="fileId"
+            @set-resource="setResource"
         />
     </template>
 
     <template v-if="dmsgEditor">
-        <DmsgEditor @go-back="goBack" :fileId="fileId" />
+        <DmsgEditor @go-back="goBack" :entry="entry" />
+    </template>
+
+    <template v-if="eventMessageEditor">
+        <EventMessageEditor
+            @go-back="goBack"
+            :entry="entry"
+        />
     </template>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import { ResourceEntry, ResourceType } from '../common/database';
+
 import {
     DmsgEditor,
+    EventMessageEditor,
     SelectInstallLocation,
     SelectResource,
 } from './components';
 
 enum AppState {
     DmsgEditor = 'DMSG_EDITOR',
+    EventMessageEditor = 'EVENT_MESSAGE_EDITOR',
     SelectInstallLocation = 'SELECT_INSTALL_LOCATION',
     SelectResource = 'SELECT_RESOURCE',
 };
@@ -35,12 +45,13 @@ interface Data {
     appState: AppState,
 
     basePath: string | null,
-    fileId: number | undefined,
+    entry?: ResourceEntry,
 };
 
 export default defineComponent({
     components: {
         DmsgEditor,
+        EventMessageEditor,
         SelectInstallLocation,
         SelectResource,
     },
@@ -53,7 +64,7 @@ export default defineComponent({
             appState: AppState.SelectInstallLocation,
 
             basePath: null,
-            fileId: undefined,
+            entry: undefined,
         } as Data;
     },
 
@@ -69,6 +80,10 @@ export default defineComponent({
         dmsgEditor() : boolean {
             return this.appState === AppState.DmsgEditor;
         },
+
+        eventMessageEditor() : boolean {
+            return this.appState === AppState.EventMessageEditor;
+        },
     },
 
     methods: {
@@ -78,10 +93,18 @@ export default defineComponent({
             this.appState = AppState.SelectResource;
         },
 
-        setFileId(fileId: number) {
-            this.fileId = fileId;
+        setResource(entry: ResourceEntry) {
+            this.entry = entry;
 
-            this.appState = AppState.DmsgEditor;
+            switch (this.entry.type) {
+                case ResourceType.Dmsg:
+                default:
+                    this.appState = AppState.DmsgEditor;
+                    break;
+                case ResourceType.EventMessage:
+                    this.appState = AppState.EventMessageEditor;
+                    break;
+            }
         },
 
         goBack() {
@@ -92,6 +115,7 @@ export default defineComponent({
                     break;
 
                 case AppState.DmsgEditor:
+                case AppState.EventMessageEditor:
                     this.appState = AppState.SelectResource;
                     break;
             }

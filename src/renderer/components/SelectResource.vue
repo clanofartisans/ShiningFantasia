@@ -1,9 +1,9 @@
 <template>
     <label for="resource-select">Select Resource</label>
-    <select id="resource-select" required v-model="fileId">
-        <option v-for="resource in resourceList" v-bind:value="resource.fileId">{{ resource.fileId }} - {{ resource.description }}</option>
+    <select id="resource-select" required v-model="entry">
+        <option v-for="resource in resourceList" v-bind:value="resource">{{ resource.fileId }} - {{ resource.description }}</option>
     </select>
-    <button @click.prevent="setFileId">Load</button>
+    <button @click.prevent="setResource">Load</button>
 </template>
 
 <script lang="ts">
@@ -14,24 +14,25 @@ import { ResourceEntry, ResourceType, database } from '../../common/database';
 export default defineComponent({
     created() {
 
-        this.fileId = this.defaultFileId;
+        // this.fileId = this.defaultFileId;
+        this.entry = null;
         this.resourceList = database;
     },
 
     data() {
         return {
             resourceList: [] as ResourceEntry[],
-            fileId: null as number | null,
+            entry: null as ResourceEntry | null,
         }
     },
 
     emits: {
-        setFileId: null,
+        setResource: null,
     },
 
     methods: {
-        setFileId() {
-            this.$emit('setFileId', this.fileId);
+        setResource() {
+            this.$emit('setResource', this.entry);
         },
     },
 

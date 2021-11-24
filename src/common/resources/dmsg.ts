@@ -1,13 +1,16 @@
 import { lsb16, lsb32 } from '../bytes';
 import { decodeXiString } from '../string';
+import { Resource } from './resource';
 
-export class Dmsg {
+export class Dmsg extends Resource {
     // header magic is 64 5F 6D 73 67 00 00 00 (d_msg)
     static readonly magic = new Uint8Array([0x64, 0x5f, 0x6d, 0x73, 0x67, 0x00, 0x00, 0x00]);
 
     entries: string[];
 
     constructor(b: Buffer) {
+        super();
+
         this.entries = [];
 
         if (b.length < Dmsg.magic.length) {
