@@ -1,6 +1,5 @@
-import iconv from 'iconv-lite';
-
 import { lsb16, lsb32 } from '../bytes';
+import { decodeXiString } from '../string';
 
 export class Dmsg {
     // header magic is 64 5F 6D 73 67 00 00 00 (d_msg)
@@ -91,10 +90,8 @@ export class Dmsg {
                 }
 
                 const strBuf = b.slice(stringOffset, stringOffset + stringLength);
+                const s = decodeXiString(strBuf);
 
-                // The encoding is kinda Shift_JIS, but has a lot of
-                // non-standard bytes.
-                const s = iconv.decode(strBuf, 'Shift_JIS').trim();
                 strings.push(s);
             }
 
