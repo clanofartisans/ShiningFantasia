@@ -1,6 +1,6 @@
 import iconv from 'iconv-lite';
 
-import { lsb32 } from './bytes';
+import { lsb16, lsb32 } from './bytes';
 
 export class StringTable {
     // header magic is 64 5F 6D 73 67 00 00 00 (d_msg)
@@ -23,34 +23,82 @@ export class StringTable {
             throw new Error('StringTable truncated');
         }
 
-        for (let i = 64; i < b.length; i++) {
-            b[i] = b[i] ^ 0xff;
+        const isByteSwapped = lsb16(b, 0x08) !== 1;
+        const isInverted = lsb16(b, 0x0a) === 1;
+        // 0xc
+        // 0xe
+        // 0x10
+        const fileLength = lsb32(b, 0x14);
+        const headerSize = lsb32(b, 0x18);
+        const dataOffset = lsb32(b, 0x1c);
+        const fixedLength = lsb32(b, 0x20);
+        const dataSize = lsb32(b, 0x24);
+        const numEntries = lsb32(b, 0x28);
+        // 0x2c
+        // 0x30
+        // 0x34
+        // 0x38
+        // 0x3c
+
+        if (fileLength !== b.length) {
+            throw new Error('StringTable length is wrong');
         }
 
-        const numEntries = lsb32(b, 0x28);
+        let addrOffset = headerSize;
 
-        let addrOffset = 0x40;
-        let entryOffset = addrOffset + lsb32(b, 0x1c);
+        if (isInverted) {
+            for (let i = addrOffset; i < b.length; i++) {
+                b[i] = b[i] ^ 0xff;
+            }
+        }
 
         for (let i = 0; i < numEntries; i++) {
-            let offset = lsb32(b, addrOffset) + entryOffset;
-            let length = lsb32(b, addrOffset + 4);
+            let offset;
+            let length;
 
-            let stringLength = length - 0x28;
-
-            // Skip null characters caused by padding.
-            while (stringLength > 0 && b[offset+0x28+stringLength-1] === 0) {
-                stringLength--;
+            if (fixedLength) {
+                offset = addrOffset;
+                length = fixedLength;
+                addrOffset += fixedLength;
+            } else {
+                offset = lsb32(b, addrOffset) + dataOffset + headerSize;
+                length = lsb32(b, addrOffset + 4);
+                addrOffset += 8;
             }
 
-            const strBuf = b.slice(offset+0x28, offset+0x28+stringLength);
+            const numStrings = lsb32(b, offset);
+            const entryOffset = offset;
+            offset += 4;
 
-            // The encoding is kinda Shift_JIS, but has a lot of
-            // non-standard bytes.
-            const s = iconv.decode(strBuf, 'Shift_JIS').trim();
-            this.entries.push(s);
+            const strings = [];
 
-            addrOffset += 8;
+            for (let j = 0; j < numStrings; j++) {
+                let stringOffset = lsb32(b, offset) + entryOffset;
+                const stringType = lsb32(b, offset + 4);
+                offset += 8;
+
+                if (stringType === 0) {
+                    stringOffset += 0x1c;
+                } else {
+                    // Some sort of identifier?
+                }
+
+                let stringLength = 0;
+
+                // Calculate string length.
+                while (b[stringOffset + stringLength] !== 0) {
+                    stringLength++;
+                }
+
+                const strBuf = b.slice(stringOffset, stringOffset + stringLength);
+
+                // The encoding is kinda Shift_JIS, but has a lot of
+                // non-standard bytes.
+                const s = iconv.decode(strBuf, 'Shift_JIS').trim();
+                strings.push(s);
+            }
+
+            this.entries.push(strings.join(','));
         }
     }
 
