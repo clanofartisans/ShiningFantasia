@@ -1,4 +1,4 @@
-import { StringTable } from './stringtable';
+import { Dmsg } from './resources';
 
 export function dumpBin(b: Buffer) {
     let addr = 0;
@@ -44,11 +44,11 @@ export async function getFileName(fileId: number): Promise<GetFileNameResult | n
     return window.ipcApi.getFileName(fileId);
 }
 
-export async function loadStringTable(fileId: number): Promise<StringTable> {
+export async function loadDmsg(fileId: number): Promise<Dmsg> {
     const buf = Buffer.from(await readFile(fileId));
 
     try {
-        return new StringTable(buf);
+        return new Dmsg(buf);
     } catch (e) {
         console.error(`${fileId}: Exception ${e}`);
 

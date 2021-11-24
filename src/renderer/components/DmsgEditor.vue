@@ -18,7 +18,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { getFileName, loadStringTable } from '../../common/datloader';
+import { getFileName, loadDmsg } from '../../common/datloader';
 
 export default defineComponent({
     created() {
@@ -28,7 +28,7 @@ export default defineComponent({
                     this.baseFileName = fileName.baseFileName;
                     this.fileName = fileName.fileName;
                 }
-                return loadStringTable(this.fileId);
+                return loadDmsg(this.fileId);
             })
             .then(st => {
                 console.log(`${this.fileId}: Found ${st.entries.length} strings.`);

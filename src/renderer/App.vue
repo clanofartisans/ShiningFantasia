@@ -11,8 +11,8 @@
         />
     </template>
 
-    <template v-if="stringTable">
-        <StringTable @go-back="goBack" :fileId="fileId" />
+    <template v-if="dmsgEditor">
+        <DmsgEditor @go-back="goBack" :fileId="fileId" />
     </template>
 </template>
 
@@ -20,15 +20,15 @@
 import { defineComponent } from 'vue';
 
 import {
+    DmsgEditor,
     SelectInstallLocation,
     SelectResource,
-    StringTable,
 } from './components';
 
 enum AppState {
+    DmsgEditor = 'DMSG_EDITOR',
     SelectInstallLocation = 'SELECT_INSTALL_LOCATION',
     SelectResource = 'SELECT_RESOURCE',
-    StringTable = 'STRING_TABLE',
 };
 
 interface Data {
@@ -40,9 +40,9 @@ interface Data {
 
 export default defineComponent({
     components: {
+        DmsgEditor,
         SelectInstallLocation,
         SelectResource,
-        StringTable,
     },
 
     mounted() {
@@ -66,8 +66,8 @@ export default defineComponent({
             return this.appState === AppState.SelectResource;
         },
 
-        stringTable() : boolean {
-            return this.appState === AppState.StringTable;
+        dmsgEditor() : boolean {
+            return this.appState === AppState.DmsgEditor;
         },
     },
 
@@ -81,7 +81,7 @@ export default defineComponent({
         setFileId(fileId: number) {
             this.fileId = fileId;
 
-            this.appState = AppState.StringTable;
+            this.appState = AppState.DmsgEditor;
         },
 
         goBack() {
@@ -91,7 +91,7 @@ export default defineComponent({
                     this.appState = AppState.SelectInstallLocation;
                     break;
 
-                case AppState.StringTable:
+                case AppState.DmsgEditor:
                     this.appState = AppState.SelectResource;
                     break;
             }

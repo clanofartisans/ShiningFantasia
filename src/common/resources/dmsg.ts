@@ -1,8 +1,8 @@
 import iconv from 'iconv-lite';
 
-import { lsb16, lsb32 } from './bytes';
+import { lsb16, lsb32 } from '../bytes';
 
-export class StringTable {
+export class Dmsg {
     // header magic is 64 5F 6D 73 67 00 00 00 (d_msg)
     static readonly magic = new Uint8Array([0x64, 0x5f, 0x6d, 0x73, 0x67, 0x00, 0x00, 0x00]);
 
@@ -11,16 +11,16 @@ export class StringTable {
     constructor(b: Buffer) {
         this.entries = [];
 
-        if (b.length < StringTable.magic.length) {
+        if (b.length < Dmsg.magic.length) {
             throw new Error('buffer too small');
         }
 
-        if (b.compare(StringTable.magic, 0, StringTable.magic.length, 0, StringTable.magic.length) !== 0) {
-            throw new Error('not a StringTable');
+        if (b.compare(Dmsg.magic, 0, Dmsg.magic.length, 0, Dmsg.magic.length) !== 0) {
+            throw new Error('not a Dmsg');
         }
 
         if (b.length < 64) {
-            throw new Error('StringTable truncated');
+            throw new Error('Dmsg truncated');
         }
 
         const isByteSwapped = lsb16(b, 0x08) !== 1;
@@ -41,7 +41,7 @@ export class StringTable {
         // 0x3c
 
         if (fileLength !== b.length) {
-            throw new Error('StringTable length is wrong');
+            throw new Error('Dmsg length is wrong');
         }
 
         let addrOffset = headerSize;
