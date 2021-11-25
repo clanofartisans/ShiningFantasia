@@ -126,6 +126,9 @@ export default defineComponent({
 </script>
 
 <style scoped lang="sass">
+.fixed-top
+    max-height: 9rem
+
 .fixed-top-padding
-    padding-top: 5rem
+    padding-top: 8rem
 </style>

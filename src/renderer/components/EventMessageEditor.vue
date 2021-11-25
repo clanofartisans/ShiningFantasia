@@ -1,13 +1,15 @@
 <template>
-    <table>
+    <table class="table table-hover">
         <thead>
             <tr>
-                <th>Text</th>
+                <th scope="col">Id</th>
+                <th scope="col">Text</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="(text, id) in eventMessage.entries">
-                <td>{{ id }} - {{ text }}</td>
+                <td>{{ id }}</td>
+                <td>{{ text }}</td>
             </tr>
         </tbody>
     </table>
