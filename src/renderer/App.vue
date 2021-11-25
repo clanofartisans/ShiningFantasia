@@ -18,7 +18,7 @@ import { defineComponent } from 'vue';
 import {
     EditResource,
     SelectInstallLocation,
-} from './views';
+} from '@views';
 
 enum AppState {
     EditResource = 'EDIT_RESOURCE',

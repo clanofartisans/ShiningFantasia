@@ -9,7 +9,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { ResourceEntry, ResourceType, database } from '../../common/database';
+import { ResourceEntry, ResourceType, database } from '@common/database';
 
 export default defineComponent({
     created() {

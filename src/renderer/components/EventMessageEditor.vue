@@ -18,9 +18,9 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 
-import { ResourceEntry } from '../../common/database';
-import { loadResource } from '../../common/datloader';
-import { EventMessage } from '../../common/resources';
+import { ResourceEntry } from '@common/database';
+import { loadResource } from '@common/datloader';
+import { EventMessage } from '@common/resources';
 
 export default defineComponent({
     created() {

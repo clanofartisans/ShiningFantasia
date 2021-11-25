@@ -23,13 +23,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { ResourceEntry, ResourceType } from '../../common/database';
+import { ResourceEntry, ResourceType } from '@common/database';
 
 import {
     DmsgEditor,
     EventMessageEditor,
     SelectResource,
-} from '../components';
+} from '@components';
 
 enum AppState {
     DmsgEditor = 'DMSG_EDITOR',
