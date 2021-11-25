@@ -6,7 +6,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(text, id) in entries">
+            <tr v-for="(text, id) in eventMessage.entries">
                 <td>{{ id }} - {{ text }}</td>
             </tr>
         </tbody>
@@ -16,33 +16,22 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 
-import { ResourceEntry } from '@common/database';
-import { loadResource } from '@common/datloader';
-import { EventMessage } from '@common/resources';
+import { Resource, EventMessage } from '@common/resources';
 
 export default defineComponent({
     created() {
-        loadResource(this.entry)
-            .then(r_ => {
-                const r = r_ as EventMessage;
-                console.log(`${this.entry.fileId}: Found ${r.entries.length} strings.`);
-                this.entries = r.entries;
-            })
-            .catch(error => {
-                console.error(`${this.entry.fileId}: readResource Exception`, error);
-            });
     },
 
     props: {
-        entry: {
-            type: Object as PropType<ResourceEntry>,
+        resource: {
+            type: Object as PropType<Resource>,
             default: null,
         },
     },
 
-    data() {
-        return {
-            entries: [] as string[],
+    computed: {
+        eventMessage() {
+            return this.resource as EventMessage;
         }
     },
 

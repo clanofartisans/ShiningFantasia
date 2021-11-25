@@ -23,13 +23,13 @@
     <div class="container-fluid">
         <template v-if="dmsgEditor">
             <DmsgEditor
-                :entry="entry!"
+                :resource="resource!"
             />
         </template>
 
         <template v-if="eventMessageEditor">
             <EventMessageEditor
-                :entry="entry!"
+                :resource="resource!"
             />
         </template>
     </div>
@@ -38,7 +38,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import { loadResource } from '@common/datloader';
 import { ResourceEntry, ResourceType } from '@common/database';
+import { Resource } from '@common/resources';
 
 import {
     DmsgEditor,
@@ -56,6 +58,8 @@ interface Data {
     appState: AppState,
 
     entry: ResourceEntry | null,
+
+    resource: Resource | null,
 };
 
 export default defineComponent({
@@ -98,17 +102,24 @@ export default defineComponent({
 
     methods: {
         setResource(entry: ResourceEntry) {
-            this.entry = entry;
+            loadResource(entry)
+                .then(resource => {
+                    this.entry = entry;
+                    this.resource = resource;
 
-            switch (this.entry.type) {
-                case ResourceType.Dmsg:
-                default:
-                    this.appState = AppState.DmsgEditor;
-                    break;
-                case ResourceType.EventMessage:
-                    this.appState = AppState.EventMessageEditor;
-                    break;
-            }
+                    switch (this.entry.type) {
+                        case ResourceType.Dmsg:
+                        default:
+                            this.appState = AppState.DmsgEditor;
+                            break;
+                        case ResourceType.EventMessage:
+                            this.appState = AppState.EventMessageEditor;
+                            break;
+                    }
+                })
+                .catch(error => {
+                    console.error(`${entry.fileId}: readResource Exception`, error);
+                });
         },
     }
 });
