@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
@@ -10,12 +11,11 @@
     "esModuleInterop": true,
     "lib": [
       "esnext",
-      "dom"
     ],
-    "baseUrl": "src/main",
+    "baseUrl": ".",
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts"
+    "./**/*.ts",
+    "./**/*.d.ts"
   ]
 }

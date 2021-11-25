@@ -33,6 +33,7 @@ function getTarget({ production, target, entry, output, templates, tsconfig }) {
         output,
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
+            alias: {},
         },
         optimization: {
             splitChunks: {
@@ -108,6 +109,14 @@ function getTarget({ production, target, entry, output, templates, tsconfig }) {
     }
 
     if (target === 'electron-renderer' || target === 'web') {
+        t.resolve.alias = {
+            // TypeScript path aliases defined in tsconfig.json
+            '@common': path.resolve(__dirname, './src/common'),
+            '@components': path.resolve(__dirname, './src/renderer/components'),
+            '@store': path.resolve(__dirname, './src/renderer/store'),
+            '@views': path.resolve(__dirname, './src/renderer/views'),
+        };
+
         t.plugins = [
             new webpack.ProgressPlugin(),
             new CopyPlugin({
@@ -171,7 +180,7 @@ module.exports = function (env, argv) {
             entry: {main: './src/main/main.ts'},
             output: {path: path.resolve(__dirname, './build/main/')},
             templates: null,
-            tsconfig: path.resolve(__dirname, './tsconfig.json')
+            tsconfig: path.resolve(__dirname, 'tsconfig.json')
         }),
         getTarget({
             production,
@@ -179,7 +188,7 @@ module.exports = function (env, argv) {
             entry: {preload: './src/preload/preload.ts'},
             output: {path: path.resolve(__dirname, './build/preload/')},
             templates: null,
-            tsconfig: path.resolve(__dirname, './tsconfig.preload.json')
+            tsconfig: path.resolve(__dirname, 'src/preload/tsconfig.json')
         }),
         getTarget({
             production,
@@ -195,7 +204,7 @@ module.exports = function (env, argv) {
                     filename: 'index.html',
                 }
             ],
-            tsconfig: path.resolve(__dirname, './tsconfig.renderer.json')
+            tsconfig: path.resolve(__dirname, 'src/renderer/tsconfig.json')
         }),
     ]);
 }
