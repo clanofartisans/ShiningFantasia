@@ -1,6 +1,7 @@
 export enum ResourceType {
     Dmsg,
     EventMessage,
+    XiString,
 }
 
 export interface ResourceLanguage {
@@ -45,26 +46,18 @@ export const database: ResourceEntry[] = [
     { fileId: 0xd8b0, type: ResourceType.Dmsg,          description: '<Unknown>' },
     { fileId: 0xd8ac, type: ResourceType.Dmsg,          description: '<Unknown>' },
 
-    // already found below, can be removed
-    { fileId: 0x2d,   type: ResourceType.Dmsg,          description: '<Unknown>' }, // 0
-    { fileId: 0x3f,   type: ResourceType.Dmsg,          description: '<Unknown>' }, // 0
-    { fileId: 0x1e,   type: ResourceType.Dmsg,          description: '<Unknown>' }, // 8
-    { fileId: 0x30,   type: ResourceType.Dmsg,          description: '<Unknown>' }, // 8
-    { fileId: 0x20,   type: ResourceType.Dmsg,          description: '<Unknown>' }, // 10
-    { fileId: 0x32,   type: ResourceType.Dmsg,          description: '<Unknown>' }, // 10
-
     // Localized resources
     { fileId: 0x9A76,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 0
     { fileId: 0x9A75,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 1
     { fileId: 0xD8AD,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 2
     { fileId: 0xD8AE,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 3
     { fileId: 0xD8AB,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 4
-    { fileId: 0x3F,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 5
+    { fileId: 0x3F,    type: ResourceType.XiString,     description: '<Unknown>' }, // 5 / 0
     { fileId: 0xD95D,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 6
     { fileId: 0xD95E,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 7
-    { fileId: 0x30,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 8
+    { fileId: 0x30,    type: ResourceType.XiString,     description: '<Unknown>' }, // 8 / 8
     { fileId: 0xD960,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 9
-    { fileId: 0x32,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 10
+    { fileId: 0x32,    type: ResourceType.XiString,     description: '<Unknown>' }, // 10 / 10
     { fileId: 0xD962,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 11
     { fileId: 0xD963,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 12
     { fileId: 0xD964,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 13
@@ -159,8 +152,8 @@ export const database: ResourceEntry[] = [
     { fileId: 0x1B77,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 102
     { fileId: 0x1B7B,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 103
     { fileId: 0x1B7F,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 104
-    { fileId: 0x1914,  description: '<Unknown>' }, // 105 (Zone Event Messages)
-    { fileId: 0xE259,  description: '<Unknown>' }, // 106 (Zone Event Messages)
-    { fileId: 0x10B9F, description: '<Unknown>' }, // 107 (Zone Event Messages)
-    { fileId: 0x14E57, description: '<Unknown>' }, // 108 (Zone Event Messages)
+    { fileId: 0x1914,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 105 (Zone Event Messages)
+    { fileId: 0xE259,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 106 (Zone Event Messages)
+    { fileId: 0x10B9F, type: ResourceType.EventMessage, description: '<Unknown>' }, // 107 (Zone Event Messages)
+    { fileId: 0x14E57, type: ResourceType.EventMessage, description: '<Unknown>' }, // 108 (Zone Event Messages)
 ];

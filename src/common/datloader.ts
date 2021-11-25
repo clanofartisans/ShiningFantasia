@@ -1,5 +1,5 @@
 import { ResourceEntry, ResourceType } from './database';
-import { Resource, Dmsg, EventMessage } from './resources';
+import { Resource, Dmsg, EventMessage, XiString } from './resources';
 
 export function dumpBin(b: Buffer) {
     let addr = 0;
@@ -82,6 +82,8 @@ function getConstructor(entry: ResourceEntry) {
             return Dmsg;
         case ResourceType.EventMessage:
             return EventMessage;
+        case ResourceType.XiString:
+            return XiString;
     }
 }
 

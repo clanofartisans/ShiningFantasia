@@ -32,6 +32,12 @@
                 :resource="resource!"
             />
         </template>
+
+        <template v-if="xiStringEditor">
+            <XiStringEditor
+                :resource="resource!"
+            />
+        </template>
     </div>
 </template>
 
@@ -46,12 +52,14 @@ import {
     DmsgEditor,
     EventMessageEditor,
     SelectResource,
+    XiStringEditor,
 } from '@components';
 
 enum AppState {
     DmsgEditor = 'DMSG_EDITOR',
     EventMessageEditor = 'EVENT_MESSAGE_EDITOR',
     None = "NONE",
+    XiStringEditor = 'XI_STRING_EDITOR',
 };
 
 interface Data {
@@ -67,6 +75,7 @@ export default defineComponent({
         DmsgEditor,
         EventMessageEditor,
         SelectResource,
+        XiStringEditor
     },
 
     mounted() {
@@ -98,6 +107,10 @@ export default defineComponent({
         eventMessageEditor() : boolean {
             return this.appState === AppState.EventMessageEditor;
         },
+
+        xiStringEditor() : boolean {
+            return this.appState === AppState.XiStringEditor;
+        },
     },
 
     methods: {
@@ -114,6 +127,9 @@ export default defineComponent({
                             break;
                         case ResourceType.EventMessage:
                             this.appState = AppState.EventMessageEditor;
+                            break;
+                        case ResourceType.XiString:
+                            this.appState = AppState.XiStringEditor;
                             break;
                     }
                 })
