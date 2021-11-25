@@ -1,6 +1,4 @@
 <template>
-    <button @click.prevent="goBack">Go Back</button>
-    <div>{{ entry.fileId }} - {{ entry.fileName?.baseName }}</div>
     <table>
         <thead>
             <tr>
@@ -49,13 +47,9 @@ export default defineComponent({
     },
 
     emits: {
-        goBack: null,
     },
 
     methods: {
-        goBack() {
-            this.$emit('goBack');
-        },
     },
 });
 </script>

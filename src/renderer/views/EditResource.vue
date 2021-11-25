@@ -1,23 +1,38 @@
 <template>
-    <template v-if="selectResource">
-        <SelectResource
-            @set-resource="setResource"
-        />
-    </template>
+    <div class="fixed-top-padding"></div>
 
-    <template v-if="dmsgEditor">
-        <DmsgEditor
-            @go-back="goBack"
-            :entry="entry!"
-        />
-    </template>
+    <div class="fixed-top bg-light">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <SelectResource
+                        @set-resource="setResource"
+                    />
+                </div>
+            </div>
 
-    <template v-if="eventMessageEditor">
-        <EventMessageEditor
-            @go-back="goBack"
-            :entry="entry!"
-        />
-    </template>
+            <div class="row">
+                <div class="col">
+                    <div v-if="entry">{{ entry.fileId }} - {{ entry.fileName?.baseName }}</div>
+                    <div v-else>&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <template v-if="dmsgEditor">
+            <DmsgEditor
+                :entry="entry!"
+            />
+        </template>
+
+        <template v-if="eventMessageEditor">
+            <EventMessageEditor
+                :entry="entry!"
+            />
+        </template>
+    </div>
 </template>
 
 <script lang="ts">
@@ -34,7 +49,7 @@ import {
 enum AppState {
     DmsgEditor = 'DMSG_EDITOR',
     EventMessageEditor = 'EVENT_MESSAGE_EDITOR',
-    SelectResource = 'SELECT_RESOURCE',
+    None = "NONE",
 };
 
 interface Data {
@@ -62,14 +77,14 @@ export default defineComponent({
 
     data() {
         return {
-            appState: AppState.SelectResource,
+            appState: AppState.None,
             entry: null,
         } as Data;
     },
 
     computed: {
-        selectResource() : boolean {
-            return this.appState === AppState.SelectResource;
+        none() : boolean {
+            return this.appState === AppState.None;
         },
 
         dmsgEditor() : boolean {
@@ -95,22 +110,11 @@ export default defineComponent({
                     break;
             }
         },
-
-        goBack() {
-            // until there's an actual app stack
-            switch (this.appState) {
-                case AppState.SelectResource:
-                    break;
-
-                case AppState.DmsgEditor:
-                case AppState.EventMessageEditor:
-                    this.appState = AppState.SelectResource;
-                    break;
-            }
-        }
     }
 });
 </script>
 
 <style scoped lang="sass">
+.fixed-top-padding
+    padding-top: 5rem
 </style>
