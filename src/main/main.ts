@@ -42,6 +42,19 @@ ipcMain.handle('set-base-path', async (event, basePath) => {
     return true;
 });
 
+ipcMain.handle('get-file-list', async (event) => {
+    if (datReader) {
+        const fileTable = datReader.fileTable;
+
+        const fileList = [];
+        for (let i = 0; i < fileTable.length; i++) {
+            fileList.push(fileTable.getBaseFileName(i));
+        }
+        return fileList;
+    }
+    return null;
+});
+
 ipcMain.handle('get-unique-id', async (event, fileId) => {
     if (datReader) {
         return datReader.getUniqueId(fileId);

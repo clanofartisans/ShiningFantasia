@@ -11,6 +11,10 @@ contextBridge.exposeInMainWorld(
             return ipcRenderer.invoke('set-base-path', basePath);
         },
 
+        getFileList: () => {
+            return ipcRenderer.invoke('get-file-list');
+        },
+
         getUniqueId: (fileId: number) => {
             return ipcRenderer.invoke('get-unique-id', fileId);
         },
