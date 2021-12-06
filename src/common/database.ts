@@ -23,7 +23,9 @@ export interface ResourceEntry {
     fileName?: ResourceFileName | null,
 }
 
-export const database: ResourceEntry[] = [
+export const database: ResourceEntry[] = [];
+
+const commonResources: ResourceEntry[] = [
     // Common resources
     {
         fileId: 0xd8b2,
@@ -152,8 +154,74 @@ export const database: ResourceEntry[] = [
     { fileId: 0x1B77,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 102
     { fileId: 0x1B7B,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 103
     { fileId: 0x1B7F,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 104
-    { fileId: 0x1914,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 105 (Zone Event Messages)
-    { fileId: 0xE259,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 106 (Zone Event Messages)
-    { fileId: 0x10B9F, type: ResourceType.EventMessage, description: '<Unknown>' }, // 107 (Zone Event Messages)
-    { fileId: 0x14E57, type: ResourceType.EventMessage, description: '<Unknown>' }, // 108 (Zone Event Messages)
 ];
+
+// { fileId: 0x1914,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 105 (Zone Event Messages 0-255)
+// { fileId: 0xE259,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 106 (Zone Event Messages 1000-1999)
+// { fileId: 0x10B9F, type: ResourceType.EventMessage, description: '<Unknown>' }, // 107 (Zone Event Messages 2000+)
+// { fileId: 0x14E57, type: ResourceType.EventMessage, description: '<Unknown>' }, // 108 (Zone Event Messages 256-999)
+
+export function init(fileList: string[]) {
+    database.length = 0;
+
+    // Copy over common resources.
+    for (const entry of commonResources) {
+        database.push(entry);
+    }
+
+    // Temporary for testing:
+    // The 2000+ range is actually 1000+
+    // Localized resource 106 is then the base for certain events
+
+    // Per-zone event messages.
+    for (let i = 0; i < 256; i++) {
+        const fileId = 0x1914 + i;
+
+        if (fileList[fileId]) {
+            database.push({
+                fileId,
+                type: ResourceType.EventMessage,
+                description: `Zone ${i}`,
+            })
+        }
+    }
+
+    // Looks like the range here is 256-555 before hitting the German versions.
+    for (let i = 256; i < 555; i++) {
+        const fileId = 0x14E57 + i - 256;
+
+        if (fileList[fileId]) {
+            database.push({
+                fileId,
+                type: ResourceType.EventMessage,
+                description: `Zone ${i}`,
+            })
+        }
+    }
+
+    // Looks like the range here is 32 before hitting the German versions.
+    for (let i = 1000; i < 1000 + 32; i++) {
+        const fileId = 0xE259 + i - 1000;
+
+        if (fileList[fileId]) {
+            database.push({
+                fileId,
+                type: ResourceType.EventMessage,
+                description: `Zone ${i}`,
+            })
+        }
+    }
+
+    // Looks like the range here is 300 before hitting the German versions.
+    for (let i = 2000; i < 2000 + 300; i++) {
+        const fileId = 0x10B9F + i - 2000;
+
+        if (fileList[fileId]) {
+            database.push({
+                fileId,
+                type: ResourceType.EventMessage,
+                description: `Zone ${i}`,
+            })
+        }
+    }
+}

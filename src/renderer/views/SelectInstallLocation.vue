@@ -8,6 +8,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import { init as initDatabase } from '@common/database';
+
 export default defineComponent({
     data() {
         return {
@@ -30,6 +32,11 @@ export default defineComponent({
         setBasePath() {
             window.ipcApi.setBasePath(this.basePath)
                 .then(result => {
+                    return window.ipcApi.getFileList();
+                })
+                .then(fileList => {
+                    initDatabase(fileList);
+
                     this.$emit('setBasePath', this.basePath);
                 })
                 .catch(error => {
