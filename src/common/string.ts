@@ -68,11 +68,11 @@ function slowDecode(strBuf: Buffer): string {
             continue;
         }
 
-        if (c == 0x92 && c1 >= 0 && c1 <= 9) {
+        if (c == 0x7f && c1 == 0x92 && c2 >= 0 && c2 <= 9) {
             // Singular/plural selector
-            const param = c1;
+            const param = c2;
             s += `{${param}:s_p}`;
-            i++;
+            i += 2;
             continue;
         }
 
@@ -81,6 +81,15 @@ function slowDecode(strBuf: Buffer): string {
         if (c == 0x85 && c1 == 0xdb) {
             // ü
             s += 'ü';
+            i++;
+            continue;
+        }
+
+        // Known multi-character sequences that aren't yet converted.
+
+        if (c == 0xef) {
+            s += `<${c.toString(16).toUpperCase().padStart(2, '0')}${c1.toString(16).toUpperCase().padStart(2, '0')}>`;
+            i++;
             continue;
         }
 
