@@ -1,15 +1,35 @@
-import iconv from 'iconv-lite';
+import { ShiftJISTable, ShiftJISBytes, SpecialCode } from './Shift_JIS';
 
-import { ShiftJISTable, ShiftJISBytes } from './Shift_JIS';
+function convertSpecial(orig: number, code: SpecialCode, param: Buffer | never[]): string {
+    switch (code) {
+        default:
+        case SpecialCode.UNKNOWN: {
+            const pad = (orig > 255) ? 4 : 2;
 
-const useIconv = false;
+            switch (param.length) {
+                default:
+                    return `<${orig.toString(16).toUpperCase().padStart(pad, '0')}:${Array.prototype.map.call(param, x => x.toString(16).toUpperCase().padStart(2, '0')).join(',')}>`;
+                case 0:
+                    return `<${orig.toString(16).toUpperCase().padStart(pad, '0')}>`;
+            }
+        }
 
-function slowDecode(strBuf: Buffer): string {
+        case SpecialCode.UNKNOWN_CHAR:
+            return `\\x${orig.toString(16).padStart(2, '0')}`;
+
+        case SpecialCode.NUL:
+            return '\\0';
+
+        case SpecialCode.PLAYER_NAME:
+            return '{playerName}';
+    }
+}
+
+export function decodeXiString(strBuf: Buffer): string {
+    // The encoding is kinda Shift_JIS, but has a lot of
+    // non-standard bytes.
+
     let s = '';
-
-    // Try converting the string byte-by-byte.
-    // This will one day need to use a modified Shift_JIS
-    // conversion to handle all of the custom codes.
 
     for (let i = 0; i < strBuf.length;) {
         let c = strBuf[i];
@@ -22,7 +42,16 @@ function slowDecode(strBuf: Buffer): string {
         i += bytes;
 
         const codePoint = ShiftJISTable[c];
-        if (codePoint > 0) {
+        if (codePoint < 0) {
+            const code = -codePoint;
+            const special = (code & 0xffff) as SpecialCode;
+            const extra = (code >> 16);
+
+            const param = (extra > 0) ? ((i+extra) < strBuf.length ? strBuf.slice(i, i + extra) : []) : [];
+            i += extra;
+
+            s += convertSpecial(c, special, param);
+        } else if (codePoint > 0) {
             s += String.fromCodePoint(codePoint);
         } else {
             s += `<${c.toString(16).toUpperCase().padStart(bytes * 2, '0')}>`;
@@ -117,14 +146,4 @@ function slowDecode(strBuf: Buffer): string {
     }
 */
     return s;
-}
-
-export function decodeXiString(strBuf: Buffer): string {
-    // The encoding is kinda Shift_JIS, but has a lot of
-    // non-standard bytes.
-
-    if (useIconv) {
-        return iconv.decode(strBuf, 'Shift_JIS');
-    }
-    return slowDecode(strBuf);
 }
