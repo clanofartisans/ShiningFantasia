@@ -1,5 +1,7 @@
 import iconv from 'iconv-lite';
 
+import { ShiftJISTable, ShiftJISBytes } from './Shift_JIS';
+
 const useIconv = false;
 
 function slowDecode(strBuf: Buffer): string {
@@ -9,8 +11,25 @@ function slowDecode(strBuf: Buffer): string {
     // This will one day need to use a modified Shift_JIS
     // conversion to handle all of the custom codes.
 
-    for (let i = 0; i < strBuf.length; i++) {
-        const c = strBuf[i];
+    for (let i = 0; i < strBuf.length;) {
+        let c = strBuf[i];
+
+        const bytes = ShiftJISBytes[c];
+        if (bytes > 1) {
+            const c1 = (i+1) < strBuf.length ? strBuf[i+1] : 0;
+            c = (c << 8) | c1;
+        }
+        i += bytes;
+
+        const codePoint = ShiftJISTable[c];
+        if (codePoint > 0) {
+            s += String.fromCodePoint(codePoint);
+        } else {
+            s += `<${c.toString(16).toUpperCase().padStart(bytes * 2, '0')}>`;
+        }
+    }
+
+/*
         const c1 = (i+1) < strBuf.length ? strBuf[i+1] : 0xffff;
         const c2 = (i+2) < strBuf.length ? strBuf[i+2] : 0xffff;
 
@@ -96,7 +115,7 @@ function slowDecode(strBuf: Buffer): string {
         // Unhandled, just output the hex.
         s += `<${c.toString(16).toUpperCase().padStart(2, '0')}>`;
     }
-
+*/
     return s;
 }
 
