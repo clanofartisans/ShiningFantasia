@@ -46,11 +46,6 @@ export class EventMessage extends Resource {
 
             let stringLength = (nextOffset - stringOffset) - 1;
 
-            // Calculate string length. Temporary until decodeXiString is complete.
-            while (stringLength > 0 && b[stringOffset + stringLength - 1] === 0) {
-                stringLength--;
-            }
-
             const strBuf = b.slice(stringOffset, stringOffset + stringLength);
             const s = decodeXiString(strBuf);
             this.entries.push(s);

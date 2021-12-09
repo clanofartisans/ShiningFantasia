@@ -41,6 +41,11 @@ export function decodeXiString(strBuf: Buffer): string {
         }
         i += bytes;
 
+        if (c === 0) {
+            // End of the string.
+            break;
+        }
+
         const codePoint = ShiftJISTable[c];
         if (codePoint < 0) {
             const code = -codePoint;
