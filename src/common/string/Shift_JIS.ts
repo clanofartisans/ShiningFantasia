@@ -32661,7 +32661,7 @@ export const ShiftJISTable = [
 	Unknown, // 0x7F7E
 	Unknown, // 0x7F7F
 	Unknown1, // 0x7F80
-	Unknown, // 0x7F81
+	Unknown1, // 0x7F81
 	Unknown, // 0x7F82
 	Unknown, // 0x7F83
 	Unknown1, // 0x7F84
@@ -32672,7 +32672,7 @@ export const ShiftJISTable = [
 	Unknown, // 0x7F89
 	Unknown, // 0x7F8A
 	Unknown, // 0x7F8B
-	Unknown1, // 0x7F8C
+	Unknown, // 0x7F8C
 	Unknown, // 0x7F8D
 	Unknown, // 0x7F8E
 	Unknown1, // 0x7F8F
