@@ -156,6 +156,11 @@ const commonResources: ResourceEntry[] = [
     { fileId: 0x1B7F,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 104
 ];
 
+// 0x17E8 0xE239 0x10A73 0x14D2B
+// 0x1914 0xE259 0x10B9F 0x14E57
+// 0xDA39 0xE279 0x10CCB 0x14F83
+// 0xDBDD 0xE299 0x10DF7 0x150AF
+
 // { fileId: 0x1914,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 105 (Zone Event Messages 0-255)
 // { fileId: 0xE259,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 106 (Zone Event Messages 1000-1999)
 // { fileId: 0x10B9F, type: ResourceType.EventMessage, description: '<Unknown>' }, // 107 (Zone Event Messages 2000+)
@@ -175,13 +180,43 @@ export function init(fileList: string[]) {
 
     // Per-zone event messages.
     for (let i = 0; i < 256; i++) {
-        const fileId = 0x1914 + i;
+        const fileIdJP = 0x17E8 + i;
 
-        if (fileList[fileId]) {
+        if (fileList[fileIdJP]) {
             database.push({
-                fileId,
+                fileId: fileIdJP,
                 type: ResourceType.EventMessage,
-                description: `Zone ${i}`,
+                description: `Zone ${i} (JP)`,
+            })
+        }
+
+        const fileIdEN = 0x1914 + i;
+
+        if (fileList[fileIdEN]) {
+            database.push({
+                fileId: fileIdEN,
+                type: ResourceType.EventMessage,
+                description: `Zone ${i} (EN)`,
+            })
+        }
+
+        const fileIdDE = 0xDA39 + i;
+
+        if (fileList[fileIdDE]) {
+            database.push({
+                fileId: fileIdDE,
+                type: ResourceType.EventMessage,
+                description: `Zone ${i} (DE)`,
+            })
+        }
+
+        const fileIdFR = 0xDBDD + i;
+
+        if (fileList[fileIdFR]) {
+            database.push({
+                fileId: fileIdFR,
+                type: ResourceType.EventMessage,
+                description: `Zone ${i} (FR)`,
             })
         }
     }
@@ -194,7 +229,7 @@ export function init(fileList: string[]) {
             database.push({
                 fileId,
                 type: ResourceType.EventMessage,
-                description: `Zone ${i}`,
+                description: `Zone ${i} (EN)`,
             })
         }
     }
@@ -207,7 +242,7 @@ export function init(fileList: string[]) {
             database.push({
                 fileId,
                 type: ResourceType.EventMessage,
-                description: `Zone ${i}`,
+                description: `Zone ${i} (EN)`,
             })
         }
     }
@@ -220,7 +255,7 @@ export function init(fileList: string[]) {
             database.push({
                 fileId,
                 type: ResourceType.EventMessage,
-                description: `Zone ${i}`,
+                description: `Zone ${i} (EN)`,
             })
         }
     }
