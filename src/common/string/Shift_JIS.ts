@@ -3,7 +3,29 @@ export enum SpecialCode {
 	UNKNOWN_CHAR,
 
 	NUL,
+	SET_X,
+	SET_Y,
+	SKILL_TEXT,
 	PLAYER_NAME,
+	NPC_NAME,
+	VALUE,
+	INDEX,
+	SOUND_EFFECT,
+	EVENT_SOUND_EFFECT,
+	SPELL_NAME,
+	EVENT_SPELL_NAME,
+	NUMBER,
+	TIME,
+	ABILITY_NAME,
+	EVENT_ABILITY_NAME,
+	PARTY_MEMBER_NAME_BY_ID,
+	PARTY_MEMBER_NAME,
+	EVENT_STRING,
+	HEADING,
+	PLAYER_GENDER,
+	NPC0_GENDER,
+	NPC1_GENDER,
+	PLURAL_SELECT,
 };
 
 function MakeSpecial(code: SpecialCode, bytes: number): number {
@@ -17,39 +39,61 @@ const Unknown2 = MakeSpecial(SpecialCode.UNKNOWN, 2);
 const UnknownChar = MakeSpecial(SpecialCode.UNKNOWN_CHAR, 0);
 
 const NUL = MakeSpecial(SpecialCode.NUL, 0);
+const SetX = MakeSpecial(SpecialCode.SET_X, 2);
+const SetY = MakeSpecial(SpecialCode.SET_Y, 2);
+const SkillText = MakeSpecial(SpecialCode.SKILL_TEXT, 1);
 const PlayerName = MakeSpecial(SpecialCode.PLAYER_NAME, 0);
+const NpcName = MakeSpecial(SpecialCode.NPC_NAME, 0);
+const Value = MakeSpecial(SpecialCode.VALUE, 1);
+const IndexParam = MakeSpecial(SpecialCode.INDEX, 1);
+const SoundEffect = MakeSpecial(SpecialCode.SOUND_EFFECT, 1);
+const EventSoundEffect = MakeSpecial(SpecialCode.EVENT_SOUND_EFFECT, 1);
+const SpellName = MakeSpecial(SpecialCode.SPELL_NAME, 1);
+const EventSpellName = MakeSpecial(SpecialCode.EVENT_SPELL_NAME, 1);
+const NumberParam = MakeSpecial(SpecialCode.NUMBER, 1);
+const Time = MakeSpecial(SpecialCode.TIME, 1);
+const AbiltityName = MakeSpecial(SpecialCode.ABILITY_NAME, 1);
+const PartyMemberNameById = MakeSpecial(SpecialCode.PARTY_MEMBER_NAME_BY_ID, 1);
+const PartyMemberName = MakeSpecial(SpecialCode.PARTY_MEMBER_NAME, 1);
+const EventAbilityName = MakeSpecial(SpecialCode.EVENT_ABILITY_NAME, 1);
+const EventString = MakeSpecial(SpecialCode.EVENT_STRING, 1);
+const Heading = MakeSpecial(SpecialCode.HEADING, 1);
+const PlayerGender = MakeSpecial(SpecialCode.PLAYER_GENDER, 0);
+const Npc0Gender = MakeSpecial(SpecialCode.NPC0_GENDER, 0);
+const Npc1Gender = MakeSpecial(SpecialCode.NPC1_GENDER, 0);
+const PluralSelect = MakeSpecial(SpecialCode.PLURAL_SELECT, 1);
 
 export const ShiftJISTable = [
 	NUL, // 0x00
 	0x0000, // 0x01
-	Unknown2, // 0x02
-	Unknown2, // 0x03
+	SetX, // 0x02
+	SetY, // 0x03
 	0x0000, // 0x04
-	Unknown1, // 0x05
+	SkillText, // 0x05
 	0x0000, // 0x06
 	UnknownChar, // 0x07
 	PlayerName, // 0x08
-	0x0000, // 0x09
-	Unknown1, // 0x0A
+	NpcName, // 0x09
+	Value, // 0x0A
 	UnknownChar, // 0x0B
-	Unknown1, // 0x0C
-	Unknown1, // 0x0D
-	Unknown1, // 0x0E
+	IndexParam, // 0x0C
+	SoundEffect, // 0x0D
+	EventSoundEffect, // 0x0E
 	0x0000, // 0x0F
-	Unknown1, // 0x10
-	Unknown1, // 0x11
-	Unknown1, // 0x12
+	SpellName, // 0x10
+	EventSpellName, // 0x11
+	NumberParam, // 0x12
 	Unknown1, // 0x13
-	Unknown1, // 0x14
-	UnknownChar, // 0x15 - fakey zero-width space
-	Unknown1, // 0x16
-	Unknown1, // 0x17
-	Unknown1, // 0x18
-	Unknown1, // 0x19
-	Unknown1, // 0x1A
+	Time, // 0x14
+	UnknownChar, // 0x15 - soft hyphen (SHY / 0xad)
+	AbiltityName, // 0x16
+	Unknown1, // 0x17 - entity animation, unused?
+	PartyMemberNameById, // 0x18
+	PartyMemberName, // 0x19
+	EventAbilityName, // 0x1A
 	0x0000, // 0x1B
-	Unknown1, // 0x1C
-	Unknown, // 0x1D
+	EventString, // 0x1C
+	Heading, // 0x1D
 	Unknown1, // 0x1E
 	Unknown1, // 0x1F
 	0x0020, // 0x20
@@ -32665,7 +32709,7 @@ export const ShiftJISTable = [
 	Unknown, // 0x7F82
 	Unknown, // 0x7F83
 	Unknown1, // 0x7F84
-	Unknown, // 0x7F85
+	PlayerGender, // 0x7F85
 	Unknown1, // 0x7F86
 	Unknown1, // 0x7F87
 	Unknown1, // 0x7F88
@@ -32676,9 +32720,9 @@ export const ShiftJISTable = [
 	Unknown, // 0x7F8D
 	Unknown, // 0x7F8E
 	Unknown1, // 0x7F8F
-	Unknown, // 0x7F90
-	Unknown, // 0x7F91
-	Unknown1, // 0x7F92
+	Npc0Gender, // 0x7F90
+	Npc1Gender, // 0x7F91
+	PluralSelect, // 0x7F92
 	Unknown, // 0x7F93
 	Unknown1, // 0x7F94
 	Unknown1, // 0x7F95
