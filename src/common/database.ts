@@ -71,22 +71,22 @@ const commonResources: ResourceEntry[] = [
     { fileId: 0xD8AB,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 19 / 18
     { fileId: 0xD969,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 20
     { fileId: 0xD96A,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 21 / 16
-    { fileId: 0xD96B,  type: ResourceType.Dmsg,         description: 'Directions' }, // 22 / 15
-    { fileId: 0xD96C,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 23 / 17
+    { fileId: 0xD96B,  type: ResourceType.Dmsg,         description: 'Heading Names' }, // 22 / 15
+    { fileId: 0xD96C,  type: ResourceType.Dmsg,         description: 'Moon Phases' }, // 23 / 17
     { fileId: 0xD971,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 24
-    { fileId: 0xD972,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 25 / 23
-    { fileId: 0xD985,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 26
-    { fileId: 0xD98C,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 27
+    { fileId: 0xD972,  type: ResourceType.Dmsg,         description: 'Equipment Slot Names' }, // 25 / 23
+    { fileId: 0xD985,  type: ResourceType.Dmsg,         description: 'Blue Mage Spell Help Text' }, // 26
+    { fileId: 0xD98C,  type: ResourceType.Dmsg,         description: 'Augment Attributes' }, // 27
     { fileId: 0xD988,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 28
-    { fileId: 0xD986,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 29
-    { fileId: 0xD98E,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 30
-    { fileId: 0xD97A,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 31
-    { fileId: 0xD989,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 32
+    { fileId: 0xD986,  type: ResourceType.Dmsg,         description: 'Menu Text - Merit Points' }, // 29
+    { fileId: 0xD98E,  type: ResourceType.Dmsg,         description: 'Menu Text - Job Points' }, // 30
+    { fileId: 0xD97A,  type: ResourceType.Dmsg,         description: 'Menu Text - Job Point Gifts' }, // 31
+    { fileId: 0xD989,  type: ResourceType.Dmsg,         description: 'Soulplate Attributes' }, // 32
     { fileId: 0xD98D,  type: ResourceType.Dmsg,         description: 'Trust Messages' }, // 33
-    { fileId: 0xD97C,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 34
-    { fileId: 0xD987,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 35
-    { fileId: 0xD98A,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 36
-    { fileId: 0xD98B,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 37
+    { fileId: 0xD97C,  type: ResourceType.Dmsg,         description: 'Emote Help Text' }, // 34
+    { fileId: 0xD987,  type: ResourceType.Dmsg,         description: 'Chat Window Command Help Text' }, // 35
+    { fileId: 0xD98A,  type: ResourceType.Dmsg,         description: 'Monster Family Names' }, // 36
+    { fileId: 0xD98B,  type: ResourceType.Dmsg,         description: 'Moblin Maze Mongers Rune Help Text' }, // 37
     { fileId: 0x5B,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 38
     { fileId: 0x49,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 39
     { fileId: 0xD977,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 40
@@ -109,7 +109,7 @@ const commonResources: ResourceEntry[] = [
     { fileId: 0x9A85,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 57
     { fileId: 0xD975,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 58
     { fileId: 0xD97F,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 59 / 26
-    { fileId: 0xD998,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 60
+    { fileId: 0xD998,  type: ResourceType.Dmsg,         description: 'Titles' }, // 60
     { fileId: 0xD999,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 61
     { fileId: 0xD99A,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 62
     { fileId: 0xD99B,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 63
@@ -137,23 +137,23 @@ const commonResources: ResourceEntry[] = [
     { fileId: 0xD9BE,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 85
     { fileId: 0xD9BB,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 86
     { fileId: 0xD9BC,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 87
-    { fileId: 0x52,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 88
-    { fileId: 0x51,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 89
-    { fileId: 0xD9B4,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 90
-    { fileId: 0xD996,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 91
-    { fileId: 0xD9B6,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 92
+    { fileId: 0x52,    type: ResourceType.Dmsg,         description: 'Resource - <Unknown>' }, // 88
+    { fileId: 0x51,    type: ResourceType.Dmsg,         description: 'Resource - <Unknown>' }, // 89
+    { fileId: 0xD9B4,  type: ResourceType.Dmsg,         description: 'Status Names with Adjectives' }, // 90
+    { fileId: 0xD996,  type: ResourceType.Dmsg,         description: 'Spell Names' }, // 91
+    { fileId: 0xD9B6,  type: ResourceType.Dmsg,         description: 'Spell Help Text' }, // 92
     { fileId: 0xD995,  type: ResourceType.Dmsg,         description: 'Ability Names' }, // 93
     { fileId: 0xD9B5,  type: ResourceType.Dmsg,         description: 'Ability Help Text' }, // 94
-    { fileId: 0xD981,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 95
-    { fileId: 0xD982,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 96
-    { fileId: 0x1B6D,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 97
-    { fileId: 0x1B6F,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 98
-    { fileId: 0x1B71,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 99
-    { fileId: 0x1B73,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 100
-    { fileId: 0x1B75,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 101
-    { fileId: 0x1B77,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 102
+    { fileId: 0xD981,  type: ResourceType.Dmsg,         description: 'Mount Names' }, // 95
+    { fileId: 0xD982,  type: ResourceType.Dmsg,         description: 'Mount Help Text' }, // 96
+    { fileId: 0x1B6D,  type: ResourceType.EventMessage, description: 'Skill Names' }, // 97
+    { fileId: 0x1B6F,  type: ResourceType.EventMessage, description: 'Modifier Flags' }, // 98
+    { fileId: 0x1B71,  type: ResourceType.EventMessage, description: 'Emotes' }, // 99
+    { fileId: 0x1B73,  type: ResourceType.EventMessage, description: 'Ability Messages' }, // 100
+    { fileId: 0x1B75,  type: ResourceType.EventMessage, description: 'Status Names' }, // 101
+    { fileId: 0x1B77,  type: ResourceType.EventMessage, description: 'System Messages' }, // 102
     { fileId: 0x1B7B,  type: ResourceType.EventMessage, description: 'Ability Names (256+)' }, // 103
-    { fileId: 0x1B7F,  type: ResourceType.EventMessage, description: '<Unknown>' }, // 104
+    { fileId: 0x1B7F,  type: ResourceType.EventMessage, description: 'Unity Messages' }, // 104
 ];
 
 // 0x17E8 0xE239 0x10A73 0x14D2B
