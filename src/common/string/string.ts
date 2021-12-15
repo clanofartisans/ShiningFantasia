@@ -1,4 +1,10 @@
-import { ShiftJISTable, ShiftJISBytes, SpecialCode } from './Shift_JIS';
+import {
+    ShiftJISTable,
+    ShiftJISBytes,
+    ShiftJISEventTable,
+    ShiftJISEventBytes,
+    SpecialCode
+} from './Shift_JIS';
 
 function convertSpecial(orig: number, code: SpecialCode, param: Buffer | never[]): string {
     switch (code) {
@@ -85,30 +91,39 @@ function convertSpecial(orig: number, code: SpecialCode, param: Buffer | never[]
         case SpecialCode.HEADING:
             return '{npc:heading}';
 
+        case SpecialCode.ABILITY_MODIFIERS:
+            return `{ability:modifiers:${param[0]}}`;
+
         case SpecialCode.PLAYER_GENDER:
             return '{player:gender:select}';
 
+        case SpecialCode.ABILITY_PLURAL_SELECT:
+            return `{a${param[0]}:pluralSelect}`;
+
+        case SpecialCode.NPC_PLURAL_SELECT:
+            return `{npc:${param[0]}:pluralSelect}`;
+
         case SpecialCode.NPC0_GENDER:
-            return '{npc0:gender}';
+            return '{npc:0:gender}';
 
         case SpecialCode.NPC1_GENDER:
-            return '{npc1:gender}';
+            return '{npc:1:gender}';
 
         case SpecialCode.PLURAL_SELECT:
             return `{${param[0]}:pluralSelect}`;
+
+        case SpecialCode.NEWLINE:
+            return '\\n';
     }
 }
 
-export function decodeXiString(strBuf: Buffer): string {
-    // The encoding is kinda Shift_JIS, but has a lot of
-    // non-standard bytes.
-
+function decode(byteTable: number[], table: number[], strBuf: Buffer): string {
     let s = '';
 
     for (let i = 0; i < strBuf.length;) {
         let c = strBuf[i];
 
-        const bytes = ShiftJISBytes[c];
+        const bytes = byteTable[c];
         if (bytes > 1) {
             const c1 = (i+1) < strBuf.length ? strBuf[i+1] : 0;
             c = (c << 8) | c1;
@@ -120,7 +135,7 @@ export function decodeXiString(strBuf: Buffer): string {
             break;
         }
 
-        const codePoint = ShiftJISTable[c];
+        const codePoint = table[c];
         if (codePoint < 0) {
             const code = -codePoint;
             const special = (code & 0xffff) as SpecialCode;
@@ -138,4 +153,18 @@ export function decodeXiString(strBuf: Buffer): string {
     }
 
     return s;
+}
+
+export function decodeString(strBuf: Buffer): string {
+    // The encoding is kinda Shift_JIS, but has a lot of
+    // non-standard bytes.
+
+    return decode(ShiftJISBytes, ShiftJISTable, strBuf);
+}
+
+export function decodeEventString(strBuf: Buffer): string {
+    // The encoding is kinda Shift_JIS, but has a lot of
+    // non-standard bytes.
+
+    return decode(ShiftJISEventBytes, ShiftJISEventTable, strBuf);
 }

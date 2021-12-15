@@ -1,5 +1,5 @@
 import { lsb16, lsb24, lsb32 } from '../bytes';
-import { decodeXiString } from '../string';
+import { decodeEventString } from '../string';
 import { Resource } from './resource';
 
 export class EventMessage extends Resource {
@@ -47,7 +47,7 @@ export class EventMessage extends Resource {
             let stringLength = (nextOffset - stringOffset) - 1;
 
             const strBuf = b.slice(stringOffset, stringOffset + stringLength);
-            const s = decodeXiString(strBuf);
+            const s = decodeEventString(strBuf);
             this.entries.push(s);
         }
     }

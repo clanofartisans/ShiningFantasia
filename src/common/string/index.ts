@@ -1,1 +1,1 @@
-export { decodeXiString } from './string';
+export { decodeString, decodeEventString } from './string';

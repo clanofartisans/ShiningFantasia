@@ -22,10 +22,15 @@ export enum SpecialCode {
 	PARTY_MEMBER_NAME,
 	EVENT_STRING,
 	HEADING,
+	ABILITY_MODIFIERS,
 	PLAYER_GENDER,
+	ABILITY_PLURAL_SELECT,
+	NPC_PLURAL_SELECT,
 	NPC0_GENDER,
 	NPC1_GENDER,
 	PLURAL_SELECT,
+
+	NEWLINE,
 };
 
 function MakeSpecial(code: SpecialCode, bytes: number): number {
@@ -52,18 +57,23 @@ const SpellName = MakeSpecial(SpecialCode.SPELL_NAME, 1);
 const EventSpellName = MakeSpecial(SpecialCode.EVENT_SPELL_NAME, 1);
 const NumberParam = MakeSpecial(SpecialCode.NUMBER, 1);
 const Time = MakeSpecial(SpecialCode.TIME, 1);
-const AbiltityName = MakeSpecial(SpecialCode.ABILITY_NAME, 1);
+const AbilityName = MakeSpecial(SpecialCode.ABILITY_NAME, 1);
 const PartyMemberNameById = MakeSpecial(SpecialCode.PARTY_MEMBER_NAME_BY_ID, 1);
 const PartyMemberName = MakeSpecial(SpecialCode.PARTY_MEMBER_NAME, 1);
 const EventAbilityName = MakeSpecial(SpecialCode.EVENT_ABILITY_NAME, 1);
 const EventString = MakeSpecial(SpecialCode.EVENT_STRING, 1);
 const Heading = MakeSpecial(SpecialCode.HEADING, 1);
+const AbilityModifiers = MakeSpecial(SpecialCode.ABILITY_MODIFIERS, 1);
 const PlayerGender = MakeSpecial(SpecialCode.PLAYER_GENDER, 0);
+const AbilityPluralSelect = MakeSpecial(SpecialCode.ABILITY_PLURAL_SELECT, 1);
+const NpcPluralSelect = MakeSpecial(SpecialCode.NPC_PLURAL_SELECT, 1);
 const Npc0Gender = MakeSpecial(SpecialCode.NPC0_GENDER, 0);
 const Npc1Gender = MakeSpecial(SpecialCode.NPC1_GENDER, 0);
 const PluralSelect = MakeSpecial(SpecialCode.PLURAL_SELECT, 1);
 
-export const ShiftJISTable = [
+const Newline = MakeSpecial(SpecialCode.NEWLINE, 0);
+
+export const ShiftJISEventTable = [
 	NUL, // 0x00
 	0x0000, // 0x01
 	SetX, // 0x02
@@ -86,7 +96,7 @@ export const ShiftJISTable = [
 	Unknown1, // 0x13
 	Time, // 0x14
 	UnknownChar, // 0x15 - soft hyphen (SHY / 0xad)
-	AbiltityName, // 0x16
+	AbilityName, // 0x16
 	Unknown1, // 0x17 - entity animation, unused?
 	PartyMemberNameById, // 0x18
 	PartyMemberName, // 0x19
@@ -32708,10 +32718,10 @@ export const ShiftJISTable = [
 	Unknown1, // 0x7F81
 	Unknown, // 0x7F82
 	Unknown, // 0x7F83
-	Unknown1, // 0x7F84
+	AbilityModifiers, // 0x7F84
 	PlayerGender, // 0x7F85
-	Unknown1, // 0x7F86
-	Unknown1, // 0x7F87
+	AbilityPluralSelect, // 0x7F86
+	NpcPluralSelect, // 0x7F87
 	Unknown1, // 0x7F88
 	Unknown, // 0x7F89
 	Unknown, // 0x7F8A
@@ -34688,27 +34698,27 @@ export const ShiftJISTable = [
 	0x0000, // 0x873D
 	0x0000, // 0x873E
 	0x0000, // 0x873F
-	0x0000, // 0x8740
-	0x0000, // 0x8741
-	0x0000, // 0x8742
-	0x0000, // 0x8743
-	0x0000, // 0x8744
-	0x0000, // 0x8745
-	0x0000, // 0x8746
-	0x0000, // 0x8747
-	0x0000, // 0x8748
-	0x0000, // 0x8749
-	0x0000, // 0x874A
-	0x0000, // 0x874B
-	0x0000, // 0x874C
-	0x0000, // 0x874D
-	0x0000, // 0x874E
-	0x0000, // 0x874F
-	0x0000, // 0x8750
-	0x0000, // 0x8751
-	0x0000, // 0x8752
-	0x0000, // 0x8753
-	0x0000, // 0x8754
+	0x2460, // 0x8740 -- ①
+	0x2461, // 0x8741
+	0x2462, // 0x8742
+	0x2463, // 0x8743
+	0x2464, // 0x8744
+	0x2465, // 0x8745
+	0x2466, // 0x8746
+	0x2467, // 0x8747
+	0x2468, // 0x8748
+	0x2469, // 0x8749
+	0x246A, // 0x874A
+	0x246B, // 0x874B
+	0x246C, // 0x874C
+	0x246D, // 0x874D
+	0x246E, // 0x874E
+	0x246F, // 0x874F
+	0x2470, // 0x8750
+	0x2471, // 0x8751
+	0x2472, // 0x8752
+	0x2473, // 0x8753
+	0x2160, // 0x8754
 	0x0000, // 0x8755
 	0x0000, // 0x8756
 	0x0000, // 0x8757
@@ -34771,7 +34781,7 @@ export const ShiftJISTable = [
 	0x0000, // 0x8790
 	0x0000, // 0x8791
 	0x0000, // 0x8792
-	0x0000, // 0x8793
+	0x222E, // 0x8793
 	0x0000, // 0x8794
 	0x0000, // 0x8795
 	0x0000, // 0x8796
@@ -60800,8 +60810,8 @@ export const ShiftJISTable = [
 	0x0000, // 0xED3D
 	0x0000, // 0xED3E
 	0x0000, // 0xED3F
-	0x0000, // 0xED40
-	0x0000, // 0xED41
+	0x23FB, // 0xED40
+	0x23CF, // 0xED41
 	0x0000, // 0xED42
 	0x0000, // 0xED43
 	0x0000, // 0xED44
@@ -65602,7 +65612,7 @@ export const ShiftJISTable = [
 	0x0000, // 0xFFFF
 ];
 
-export const ShiftJISBytes = [
+export const ShiftJISEventBytes = [
 	1, // 0x00
 	2, // 0x01 - 0x01 + length byte
 	1, // 0x02
@@ -65860,3 +65870,19 @@ export const ShiftJISBytes = [
 	2, // 0xFE
 	2, // 0xFF
 ];
+
+export const ShiftJISTable = ShiftJISEventTable.slice();
+export const ShiftJISBytes = ShiftJISEventBytes.slice();
+
+// Undo the event-specific stuff.
+for (let i = 0; i < 0x80; i++) {
+	ShiftJISBytes[1] = 1;
+}
+
+for (let i = 0; i < 65536; i++) {
+	if (ShiftJISTable[i] < 0) {
+		ShiftJISTable[i] = 0;
+	}
+}
+
+ShiftJISTable[0x0a] = Newline;

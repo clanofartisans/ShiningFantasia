@@ -1,5 +1,5 @@
 import { lsb16, lsb32 } from '../bytes';
-import { decodeXiString } from '../string';
+import { decodeString } from '../string';
 import { Resource } from './resource';
 
 export class XiString extends Resource {
@@ -45,7 +45,7 @@ export class XiString extends Resource {
             }
 
             const strBuf = b.slice(stringOffset, stringOffset + stringLength);
-            const s = decodeXiString(strBuf);
+            const s = decodeString(strBuf);
 
             this.entries.push(s);
         }
