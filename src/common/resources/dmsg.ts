@@ -2,6 +2,40 @@ import { lsb16, lsb32 } from '../bytes';
 import { decodeString } from '../string';
 import { Resource } from './resource';
 
+export function decodeDmsgEntry(b: Buffer): string[] {
+
+    const numStrings = lsb32(b, 0);
+    let offset = 4;
+
+    const strings = [];
+
+    for (let j = 0; j < numStrings; j++) {
+        let stringOffset = lsb32(b, offset);
+        const stringType = lsb32(b, offset + 4);
+        offset += 8;
+
+        if (stringType === 0) {
+            stringOffset += 0x1c;
+        } else {
+            // Some sort of identifier?
+        }
+
+        let stringLength = 0;
+
+        // Calculate string length.
+        while (b[stringOffset + stringLength] !== 0) {
+            stringLength++;
+        }
+
+        const strBuf = b.slice(stringOffset, stringOffset + stringLength);
+        const s = decodeString(strBuf);
+
+        strings.push(s);
+    }
+
+    return strings;
+}
+
 export class Dmsg extends Resource {
     // header magic is 64 5F 6D 73 67 00 00 00 (d_msg)
     static readonly magic = new Uint8Array([0x64, 0x5f, 0x6d, 0x73, 0x67, 0x00, 0x00, 0x00]);
@@ -68,35 +102,7 @@ export class Dmsg extends Resource {
                 addrOffset += 8;
             }
 
-            const numStrings = lsb32(b, offset);
-            const entryOffset = offset;
-            offset += 4;
-
-            const strings = [];
-
-            for (let j = 0; j < numStrings; j++) {
-                let stringOffset = lsb32(b, offset) + entryOffset;
-                const stringType = lsb32(b, offset + 4);
-                offset += 8;
-
-                if (stringType === 0) {
-                    stringOffset += 0x1c;
-                } else {
-                    // Some sort of identifier?
-                }
-
-                let stringLength = 0;
-
-                // Calculate string length.
-                while (b[stringOffset + stringLength] !== 0) {
-                    stringLength++;
-                }
-
-                const strBuf = b.slice(stringOffset, stringOffset + stringLength);
-                const s = decodeString(strBuf);
-
-                strings.push(s);
-            }
+            const strings = decodeDmsgEntry(b.slice(offset, offset + length));
 
             this.entries.push(strings.join(','));
         }
