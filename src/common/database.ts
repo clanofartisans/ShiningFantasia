@@ -1,6 +1,7 @@
 export enum ResourceType {
     Dmsg,
     EventMessage,
+    Item,
     XiString,
 }
 
@@ -87,27 +88,27 @@ const commonResources: ResourceEntry[] = [
     { fileId: 0xD987,  type: ResourceType.Dmsg,         description: 'Chat Window Command Help Text' }, // 35
     { fileId: 0xD98A,  type: ResourceType.Dmsg,         description: 'Monster Family Names' }, // 36
     { fileId: 0xD98B,  type: ResourceType.Dmsg,         description: 'Moblin Maze Mongers Rune Help Text' }, // 37
-    { fileId: 0x5B,    type: ResourceType.Dmsg,         description: 'Item 65535' }, // 38
-    { fileId: 0x49,    type: ResourceType.Dmsg,         description: 'Items 0 - 4095' }, // 39
-    { fileId: 0xD977,  type: ResourceType.Dmsg,         description: 'Items 8704 - 10239' }, // 40
-    { fileId: 0x4A,    type: ResourceType.Dmsg,         description: 'Items 4096 - 8191' }, // 41
-    { fileId: 0x4B,    type: ResourceType.Dmsg,         description: 'Items 16384 - 23039' }, // 42
-    { fileId: 0xD973,  type: ResourceType.Dmsg,         description: 'Items 28672 - 29695' }, // 43
-    { fileId: 0xD976,  type: ResourceType.Dmsg,         description: 'Items 29696 - 30719' }, // 44
-    { fileId: 0x5F,    type: ResourceType.Dmsg,         description: 'Items 61432 - 61439' }, // 45
-    { fileId: 0xD978,  type: ResourceType.Dmsg,         description: 'Items 57344 - 61431' }, // 46
-    { fileId: 0xD979,  type: ResourceType.Dmsg,         description: 'Items 61952 - 62975' }, // 47
-    { fileId: 0xD97D,  type: ResourceType.Dmsg,         description: 'Items 63024 - 63263' }, // 48
-    { fileId: 0xD97E,  type: ResourceType.Dmsg,         description: 'Items 63008 - 63023' }, // 49
-    { fileId: 0xD8D0,  type: ResourceType.Dmsg,         description: 'Items 62976 - 62995' }, // 50
-    { fileId: 0x4C,    type: ResourceType.Dmsg,         description: 'Items 10240 - 16383' }, // 51
-    { fileId: 0xD974,  type: ResourceType.Dmsg,         description: 'Items 23040 - 28671' }, // 52
-    { fileId: 0x4D,    type: ResourceType.Dmsg,         description: 'Items 8192 - 8703' }, // 53
+    { fileId: 0x5B,    type: ResourceType.Item,         description: 'Item 65535' }, // 38
+    { fileId: 0x49,    type: ResourceType.Item,         description: 'Items 0 - 4095' }, // 39
+    { fileId: 0xD977,  type: ResourceType.Item,         description: 'Items 8704 - 10239' }, // 40
+    { fileId: 0x4A,    type: ResourceType.Item,         description: 'Items 4096 - 8191' }, // 41
+    { fileId: 0x4B,    type: ResourceType.Item,         description: 'Items 16384 - 23039' }, // 42
+    { fileId: 0xD973,  type: ResourceType.Item,         description: 'Items 28672 - 29695' }, // 43
+    { fileId: 0xD976,  type: ResourceType.Item,         description: 'Items 29696 - 30719' }, // 44
+    { fileId: 0x5F,    type: ResourceType.Item,         description: 'Items 61432 - 61439' }, // 45
+    { fileId: 0xD978,  type: ResourceType.Item,         description: 'Items 57344 - 61431' }, // 46
+    { fileId: 0xD979,  type: ResourceType.Item,         description: 'Items 61952 - 62975' }, // 47
+    { fileId: 0xD97D,  type: ResourceType.Item,         description: 'Items 63024 - 63263' }, // 48
+    { fileId: 0xD97E,  type: ResourceType.Item,         description: 'Items 63008 - 63023' }, // 49
+    { fileId: 0xD8D0,  type: ResourceType.Item,         description: 'Items 62976 - 62995' }, // 50
+    { fileId: 0x4C,    type: ResourceType.Item,         description: 'Items 10240 - 16383' }, // 51
+    { fileId: 0xD974,  type: ResourceType.Item,         description: 'Items 23040 - 28671' }, // 52
+    { fileId: 0x4D,    type: ResourceType.Item,         description: 'Items 8192 - 8703' }, // 53
     { fileId: 0x55,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 54
     { fileId: 0x56,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 55
     { fileId: 0x57,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 56
     { fileId: 0x9A85,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 57
-    { fileId: 0xD975,  type: ResourceType.Dmsg,         description: 'Items 61440 - 61951' }, // 58
+    { fileId: 0xD975,  type: ResourceType.Item,         description: 'Items 61440 - 61951' }, // 58
     { fileId: 0xD97F,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 59 / 26
     { fileId: 0xD998,  type: ResourceType.Dmsg,         description: 'Titles' }, // 60
     { fileId: 0xD999,  type: ResourceType.Dmsg,         description: 'Key Items' }, // 61
