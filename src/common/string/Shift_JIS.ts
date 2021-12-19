@@ -26,9 +26,16 @@ export enum SpecialCode {
 	PLAYER_GENDER,
 	ABILITY_PLURAL_SELECT,
 	NPC_PLURAL_SELECT,
+	NPC_PROPER_SELECT,
+	ABILITY_NAME2,
 	NPC0_GENDER,
 	NPC1_GENDER,
 	PLURAL_SELECT,
+	SPECIAL_NAME,
+	TWO_DIGIT_VALUE,
+	HEX_VALUE,
+	BINARY_VALUE,
+	ACTION_HEX_VALUE,
 
 	NEWLINE,
 };
@@ -67,9 +74,16 @@ const AbilityModifiers = MakeSpecial(SpecialCode.ABILITY_MODIFIERS, 1);
 const PlayerGender = MakeSpecial(SpecialCode.PLAYER_GENDER, 0);
 const AbilityPluralSelect = MakeSpecial(SpecialCode.ABILITY_PLURAL_SELECT, 1);
 const NpcPluralSelect = MakeSpecial(SpecialCode.NPC_PLURAL_SELECT, 1);
+const NpcProperSelect = MakeSpecial(SpecialCode.NPC_PROPER_SELECT, 1);
+const AbilityName2 = MakeSpecial(SpecialCode.ABILITY_NAME2, 1);
 const Npc0Gender = MakeSpecial(SpecialCode.NPC0_GENDER, 0);
 const Npc1Gender = MakeSpecial(SpecialCode.NPC1_GENDER, 0);
 const PluralSelect = MakeSpecial(SpecialCode.PLURAL_SELECT, 1);
+const SpecialName = MakeSpecial(SpecialCode.SPECIAL_NAME, 0);
+const TwoDigitValue = MakeSpecial(SpecialCode.TWO_DIGIT_VALUE, 1);
+const HexValue = MakeSpecial(SpecialCode.HEX_VALUE, 1);
+const BinaryValue = MakeSpecial(SpecialCode.BINARY_VALUE, 1);
+const ActionHexValue = MakeSpecial(SpecialCode.ACTION_HEX_VALUE, 1);
 
 const Newline = MakeSpecial(SpecialCode.NEWLINE, 0);
 
@@ -32722,22 +32736,22 @@ export const ShiftJISEventTable = [
 	PlayerGender, // 0x7F85
 	AbilityPluralSelect, // 0x7F86
 	NpcPluralSelect, // 0x7F87
-	Unknown1, // 0x7F88
+	NpcProperSelect, // 0x7F88
 	Unknown, // 0x7F89
 	Unknown, // 0x7F8A
 	Unknown, // 0x7F8B
 	Unknown, // 0x7F8C
 	Unknown, // 0x7F8D
 	Unknown, // 0x7F8E
-	Unknown1, // 0x7F8F
+	AbilityName2, // 0x7F8F
 	Npc0Gender, // 0x7F90
 	Npc1Gender, // 0x7F91
 	PluralSelect, // 0x7F92
-	Unknown, // 0x7F93
-	Unknown1, // 0x7F94
-	Unknown1, // 0x7F95
-	Unknown1, // 0x7F96
-	Unknown1, // 0x7F97
+	SpecialName, // 0x7F93
+	TwoDigitValue, // 0x7F94
+	HexValue, // 0x7F95
+	BinaryValue, // 0x7F96
+	ActionHexValue, // 0x7F97
 	Unknown, // 0x7F98
 	Unknown, // 0x7F99
 	Unknown, // 0x7F9A
@@ -34186,12 +34200,12 @@ export const ShiftJISEventTable = [
 	0x0000, // 0x853D
 	0x0000, // 0x853E
 	0x0000, // 0x853F
-	0x0000, // 0x8540
+	0x20AC, // 0x8540
 	0x0000, // 0x8541
 	0x0000, // 0x8542
 	0x0000, // 0x8543
 	0x201E, // 0x8544
-	0x0000, // 0x8545
+	0x2026, // 0x8545
 	0x0000, // 0x8546
 	0x0000, // 0x8547
 	0x0000, // 0x8548

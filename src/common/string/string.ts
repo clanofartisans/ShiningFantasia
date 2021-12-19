@@ -66,6 +66,7 @@ function convertSpecial(orig: number, code: SpecialCode, param: Buffer | never[]
 
         case SpecialCode.NUMBER:
             // Action?
+            // Number with digit group separators
             return `{a${param[0]}:number}`;
 
         case SpecialCode.TIME:
@@ -103,6 +104,14 @@ function convertSpecial(orig: number, code: SpecialCode, param: Buffer | never[]
         case SpecialCode.NPC_PLURAL_SELECT:
             return `{npc:${param[0]}:pluralSelect}`;
 
+        case SpecialCode.NPC_PROPER_SELECT:
+            return `{npc:${param[0]}:properSelect}`;
+
+        case SpecialCode.ABILITY_NAME2:
+            // Action?
+            // Action names are offset by 512.
+            return `{a${param[0]}:abilityName2}`;
+
         case SpecialCode.NPC0_GENDER:
             return '{npc:0:gender}';
 
@@ -111,6 +120,21 @@ function convertSpecial(orig: number, code: SpecialCode, param: Buffer | never[]
 
         case SpecialCode.PLURAL_SELECT:
             return `{${param[0]}:pluralSelect}`;
+
+        case SpecialCode.SPECIAL_NAME:
+            // One of the parameters passed into the EventMessageFormatter.
+            // Source depends on how the message was generated.
+            return `{special_name}`;
+
+        case SpecialCode.TWO_DIGIT_VALUE:
+            return `{${param[0]}:02d}`;
+
+        case SpecialCode.HEX_VALUE:
+            // $ left out to avoid confusion
+            return `{${param[0]}:x}`;
+
+        case SpecialCode.BINARY_VALUE:
+            return `{${param[0]}:b}`;
 
         case SpecialCode.NEWLINE:
             return '\\n';
