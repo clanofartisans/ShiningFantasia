@@ -1,7 +1,7 @@
 <template>
     <label for="item-select" class="form-label">Select Item</label>
     <select id="item-select" class="form-control" required v-model="item">
-        <option v-for="i in itemDatabase.entries" v-bind:value="i">{{ i.id }}</option>
+        <option v-for="i in itemDatabase.entries" v-bind:value="i">Item {{ i.id }} - {{ i.itemName }} </option>
     </select>
 
     <template v-if="item">
@@ -42,13 +42,10 @@ export default defineComponent({
     computed: {
         itemDatabase() {
             return this.resource as ItemDatabase;
-        }
+        },
     },
 
     emits: {
-    },
-
-    methods: {
     },
 });
 </script>
