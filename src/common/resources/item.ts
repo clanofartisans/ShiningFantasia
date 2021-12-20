@@ -1,5 +1,5 @@
 import { lsb16, lsb24, lsb32, lsb8 } from '../bytes';
-import { decodeDmsgEntry } from './dmsg';
+import { decodeDmsgEntry, Entry as DmsgEntry } from './dmsg';
 import { Resource } from './resource';
 
 import { dumpBinToStr } from '../datloader';
@@ -39,14 +39,14 @@ export class Item {
         }
     }
 
-    get itemName() {
+    get itemName() : string {
         return '<Unknown>';
     }
 }
 
 export class ItemType0 extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     stack: number;
     _unk4: number;
@@ -76,7 +76,7 @@ export class ItemType0 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -85,7 +85,7 @@ export class ItemType0 extends Item {
 
 export class ItemType1 extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     stack: number;
     _unk4: number;
@@ -121,7 +121,7 @@ export class ItemType1 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -130,7 +130,7 @@ export class ItemType1 extends Item {
 
 export class ItemType2 extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     stack: number;
     _unk4: number;
@@ -160,7 +160,7 @@ export class ItemType2 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -169,7 +169,7 @@ export class ItemType2 extends Item {
 
 export class ItemType3 extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     stack: number;
     _unk4: number;
@@ -201,7 +201,7 @@ export class ItemType3 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -210,7 +210,7 @@ export class ItemType3 extends Item {
 
 export class Armor extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     stack: number;
     _unk4: number;
@@ -266,7 +266,7 @@ export class Armor extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -275,7 +275,7 @@ export class Armor extends Item {
 
 export class Weapon extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     stack: number;
     _unk4: number;
@@ -339,7 +339,7 @@ export class Weapon extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -348,7 +348,7 @@ export class Weapon extends Item {
 
 export class ItemType6 extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     stack: number;
     _unk4: number;
@@ -376,7 +376,7 @@ export class ItemType6 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -385,7 +385,7 @@ export class ItemType6 extends Item {
 
 export class ItemType7 extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     stack: number;
     _unk4: number;
@@ -427,7 +427,7 @@ export class ItemType7 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -435,7 +435,7 @@ export class ItemType7 extends Item {
 }
 
 export class ItemType8 extends Item {
-    text: string[];
+    text: DmsgEntry;
     _unk15: number;
     _unk42: number;
     _unk43: number;
@@ -460,7 +460,7 @@ export class ItemType8 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -483,7 +483,7 @@ export class ItemType9 extends Item {
 
 export class ItemType10 extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     _unk14: number;
     _unk15: number;
@@ -511,7 +511,7 @@ export class ItemType10 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -519,7 +519,7 @@ export class ItemType10 extends Item {
 }
 
 export class ItemType11 extends Item {
-    text: string[];
+    text: DmsgEntry;
     _unk15: number;
     _unk31: number;
     _unk49: number;
@@ -534,7 +534,7 @@ export class ItemType11 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -554,7 +554,7 @@ export class ItemType12 extends Item {
 }
 
 export class ItemType13 extends Item {
-    text: string[];
+    text: DmsgEntry;
     _unk15: number;
     _unk55: number;
     _unk56: number;
@@ -571,7 +571,7 @@ export class ItemType13 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -579,7 +579,7 @@ export class ItemType13 extends Item {
 }
 
 export class ItemType14 extends Item {
-    text: string[];
+    text: DmsgEntry;
     _unk15: number;
     _unk53: number;
     _unk54: number;
@@ -594,7 +594,7 @@ export class ItemType14 extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';
@@ -603,7 +603,7 @@ export class ItemType14 extends Item {
 
 export class Gil extends Item {
     _unk0: number;
-    text: string[];
+    text: DmsgEntry;
     _unk2: number;
     stack: number;
     _unk4: number;
@@ -627,7 +627,7 @@ export class Gil extends Item {
     }
 
     get itemName() {
-        if (this.text.length > 0) {
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
             return this.text[0];
         }
         return '';

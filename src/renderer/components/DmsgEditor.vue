@@ -1,15 +1,28 @@
 <template>
-    <table class="table table-hover">
+    <table class="table">
         <thead>
             <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Text</th>
+                <th scope="col" style="width: 50px">Id</th>
+                <th scope="col">Entry</th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(text, id) in dmsg.entries">
+            <tr v-for="(entry, id) in dmsg.entries">
                 <td>{{ id }}</td>
-                <td>{{ text }}</td>
+                <template v-if="entry.length === 0"><td></td></template>
+                <template v-if="entry.length === 1"><td>{{ entry[0] }}</td></template>
+                <template v-if="entry.length > 1">
+                    <td class="p-0">
+                        <table class="table table-hover m-0">
+                            <tbody>
+                                <tr v-for="(elem, index) in entry">
+                                    <td style="width: 50px">{{ index }}</td>
+                                    <td>{{ elem }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </template>
             </tr>
         </tbody>
     </table>
@@ -46,4 +59,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="sass">
+.table .table > tbody > tr:last-child > td
+    border: none
 </style>

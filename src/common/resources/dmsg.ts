@@ -2,12 +2,15 @@ import { lsb16, lsb32 } from '../bytes';
 import { decodeString } from '../string';
 import { Resource } from './resource';
 
-export function decodeDmsgEntry(b: Buffer): string[] {
+export type Elem = number | string;
+export type Entry = Elem[];
+
+export function decodeDmsgEntry(b: Buffer): Entry {
 
     const numStrings = lsb32(b, 0);
     let offset = 4;
 
-    const strings = [];
+    const elems: Entry = [];
 
     for (let j = 0; j < numStrings; j++) {
         let stringOffset = lsb32(b, offset);
@@ -16,31 +19,32 @@ export function decodeDmsgEntry(b: Buffer): string[] {
 
         if (stringType === 0) {
             stringOffset += 0x1c;
+
+            let stringLength = 0;
+
+            // Calculate string length.
+            while (b[stringOffset + stringLength] !== 0) {
+                stringLength++;
+            }
+
+            const strBuf = b.slice(stringOffset, stringOffset + stringLength);
+            const s = decodeString(strBuf);
+            elems.push(s);
         } else {
-            // Some sort of identifier?
+            // todo - verify this
+            const v = lsb32(b, stringOffset);
+            elems.push(v);
         }
-
-        let stringLength = 0;
-
-        // Calculate string length.
-        while (b[stringOffset + stringLength] !== 0) {
-            stringLength++;
-        }
-
-        const strBuf = b.slice(stringOffset, stringOffset + stringLength);
-        const s = decodeString(strBuf);
-
-        strings.push(s);
     }
 
-    return strings;
+    return elems;
 }
 
 export class Dmsg extends Resource {
     // header magic is 64 5F 6D 73 67 00 00 00 (d_msg)
     static readonly magic = new Uint8Array([0x64, 0x5f, 0x6d, 0x73, 0x67, 0x00, 0x00, 0x00]);
 
-    entries: string[];
+    entries: Entry[];
 
     constructor(b: Buffer) {
         super();
@@ -102,9 +106,9 @@ export class Dmsg extends Resource {
                 addrOffset += 8;
             }
 
-            const strings = decodeDmsgEntry(b.slice(offset, offset + length));
+            const elems = decodeDmsgEntry(b.slice(offset, offset + length));
 
-            this.entries.push(strings.join(','));
+            this.entries.push(elems);
         }
     }
 
@@ -112,7 +116,7 @@ export class Dmsg extends Resource {
         return this.entries.length;
     }
 
-    getString(stringId: number): string | null {
+    getEntry(stringId: number): Entry | null {
         if (stringId < this.entries.length) {
             return this.entries[stringId];
         }
