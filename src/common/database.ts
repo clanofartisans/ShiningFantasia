@@ -1,5 +1,6 @@
 export enum ResourceType {
     Dmsg,
+    EntityList,
     EventMessage,
     Item,
     XiString,
@@ -27,6 +28,7 @@ export interface ResourceEntry {
 export const database: ResourceEntry[] = [];
 
 const commonResources: ResourceEntry[] = [
+
     // Common resources
     {
         fileId: 0xd8b2,
@@ -181,6 +183,16 @@ export function init(fileList: string[]) {
 
     // Per-zone event messages.
     for (let i = 0; i < 256; i++) {
+        const entityListId = 0x1A40 + i;
+
+        if (fileList[entityListId]) {
+            database.push({
+                fileId: entityListId,
+                type: ResourceType.EntityList,
+                description: `Entity List - Zone ${i}`,
+            })
+        }
+
         const fileIdJP = 0x17E8 + i;
 
         if (fileList[fileIdJP]) {
@@ -224,6 +236,16 @@ export function init(fileList: string[]) {
 
     // Looks like the range here is 256-555 before hitting the German versions.
     for (let i = 256; i < 555; i++) {
+        const entityListId = 0x150DB + i;
+
+        if (fileList[entityListId]) {
+            database.push({
+                fileId: entityListId,
+                type: ResourceType.EntityList,
+                description: `Entity List - Zone ${i}`,
+            })
+        }
+
         const fileId = 0x14E57 + i - 256;
 
         if (fileList[fileId]) {
@@ -250,6 +272,16 @@ export function init(fileList: string[]) {
 
     // Looks like the range here is 300 before hitting the German versions.
     for (let i = 2000; i < 2000 + 300; i++) {
+        const entityListId = 0x1055F + i - 1000;
+
+        if (fileList[entityListId]) {
+            database.push({
+                fileId: entityListId,
+                type: ResourceType.EntityList,
+                description: `Entity List - Zone ${i}`,
+            })
+        }
+
         const fileId = 0x10B9F + i - 2000;
 
         if (fileList[fileId]) {

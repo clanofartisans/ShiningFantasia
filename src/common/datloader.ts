@@ -2,6 +2,7 @@ import { ResourceEntry, ResourceType } from './database';
 import {
     Resource,
     Dmsg,
+    EntityList,
     EventMessage,
     ItemDatabase,
     XiString
@@ -121,6 +122,8 @@ function getConstructor(entry: ResourceEntry) {
         case ResourceType.Dmsg:
         default:
             return Dmsg;
+        case ResourceType.EntityList:
+            return EntityList;
         case ResourceType.EventMessage:
             return EventMessage;
         case ResourceType.Item:

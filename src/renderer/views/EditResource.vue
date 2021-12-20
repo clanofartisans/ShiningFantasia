@@ -27,6 +27,12 @@
             />
         </template>
 
+        <template v-if="entityListEditor">
+            <EntityListEditor
+                :resource="resource!"
+            />
+        </template>
+
         <template v-if="eventMessageEditor">
             <EventMessageEditor
                 :resource="resource!"
@@ -56,6 +62,7 @@ import { Resource } from '@common/resources';
 
 import {
     DmsgEditor,
+    EntityListEditor,
     EventMessageEditor,
     ItemDatabaseEditor,
     SelectResource,
@@ -64,6 +71,7 @@ import {
 
 enum AppState {
     DmsgEditor = 'DMSG_EDITOR',
+    EntityListEditor = 'ENTITY_LIST_EDITOR',
     EventMessageEditor = 'EVENT_MESSAGE_EDITOR',
     ItemDatabaseEditor = 'ITEM_DATABASE_EDITOR',
     None = "NONE",
@@ -81,10 +89,11 @@ interface Data {
 export default defineComponent({
     components: {
         DmsgEditor,
+        EntityListEditor,
         EventMessageEditor,
         ItemDatabaseEditor,
         SelectResource,
-        XiStringEditor
+        XiStringEditor,
     },
 
     mounted() {
@@ -113,6 +122,10 @@ export default defineComponent({
             return this.appState === AppState.DmsgEditor;
         },
 
+        entityListEditor() : boolean {
+            return this.appState === AppState.EntityListEditor;
+        },
+
         eventMessageEditor() : boolean {
             return this.appState === AppState.EventMessageEditor;
         },
@@ -137,6 +150,9 @@ export default defineComponent({
                         case ResourceType.Dmsg:
                         default:
                             this.appState = AppState.DmsgEditor;
+                            break;
+                        case ResourceType.EntityList:
+                            this.appState = AppState.EntityListEditor;
                             break;
                         case ResourceType.EventMessage:
                             this.appState = AppState.EventMessageEditor;
