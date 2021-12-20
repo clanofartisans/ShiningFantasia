@@ -46,7 +46,7 @@
                 <template v-if="item?.stack !== undefined">
                     <tr>
                         <td>stack</td>
-                        <td>{{ _04X(item.stack) }}</td>
+                        <td>{{ item.stack }}</td>
                     </tr>
                 </template>
 
@@ -130,14 +130,14 @@
                 <template v-if="item?.dmg !== undefined">
                     <tr>
                         <td>dmg</td>
-                        <td>{{ _04X(item.dmg) }}</td>
+                        <td>{{ item.dmg }}</td>
                     </tr>
                 </template>
 
                 <template v-if="item?.delay !== undefined">
                     <tr>
                         <td>delay</td>
-                        <td>{{ _04X(item.delay) }}</td>
+                        <td>{{ item.delay }}</td>
                     </tr>
                 </template>
 
