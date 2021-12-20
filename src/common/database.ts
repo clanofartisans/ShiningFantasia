@@ -94,7 +94,7 @@ const commonResources: ResourceEntry[] = [
     { fileId: 0x4A,    type: ResourceType.Item,         description: 'Items 4096 - 8191' }, // 41
     { fileId: 0x4B,    type: ResourceType.Item,         description: 'Weapons - Items 16384 - 23039' }, // 42
     { fileId: 0xD973,  type: ResourceType.Item,         description: 'Moblin Maze Mongers - Items 28672 - 29695' }, // 43
-    { fileId: 0xD976,  type: ResourceType.Item,         description: 'Monstronsity - Items 29696 - 30719' }, // 44
+    { fileId: 0xD976,  type: ResourceType.Item,         description: 'Monstrosity - Items 29696 - 30719' }, // 44
     { fileId: 0x5F,    type: ResourceType.Item,         description: 'Items 61432 - 61439' }, // 45
     { fileId: 0xD978,  type: ResourceType.Item,         description: 'Records of Eminence Objectives - Items 57344 - 61431' }, // 46
     { fileId: 0xD979,  type: ResourceType.Item,         description: 'Records of Eminence Categories - Items 61952 - 62975' }, // 47
@@ -108,7 +108,7 @@ const commonResources: ResourceEntry[] = [
     { fileId: 0x56,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 55
     { fileId: 0x57,    type: ResourceType.Dmsg,         description: '<Unknown>' }, // 56
     { fileId: 0x9A85,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 57
-    { fileId: 0xD975,  type: ResourceType.Item,         description: 'Monstronsity - Items 61440 - 61951' }, // 58
+    { fileId: 0xD975,  type: ResourceType.Item,         description: 'Monstrosity - Items 61440 - 61951' }, // 58
     { fileId: 0xD97F,  type: ResourceType.Dmsg,         description: 'The 15th Anniversary Quiz for the Ages' }, // 59 / 26
     { fileId: 0xD998,  type: ResourceType.Dmsg,         description: 'Titles' }, // 60
     { fileId: 0xD999,  type: ResourceType.Dmsg,         description: 'Key Items' }, // 61
