@@ -1,5 +1,7 @@
 <template>
     <template v-if="item">
+        <img ref="item-icon">
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -96,13 +98,6 @@
                     <tr>
                         <td>skill</td>
                         <td>{{ _04X(item.skill) }}</td>
-                    </tr>
-                </template>
-
-                <template v-if="item?._unk14 !== undefined">
-                    <tr>
-                        <td>_unk14</td>
-                        <td>{{ _08X(item._unk14) }}</td>
                     </tr>
                 </template>
 
@@ -442,6 +437,47 @@ export default defineComponent({
             // has its own edit component
             type: Object as PropType<any/*Item*/>,
         },
+    },
+
+    watch: {
+        item: function (item) {
+            const img : HTMLImageElement = this.$refs['item-icon'] as HTMLImageElement;
+            if (!img) {
+                return;
+            }
+
+            img.src = '';
+
+            if (!item) {
+                return;
+            }
+            if (!item?.iconTexture) {
+                return;
+            }
+
+            const b = item.iconTexture.getRGBABuffer();
+            if (!b) {
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            if (!canvas) {
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                return;
+            }
+
+            canvas.width = item.iconTexture.width;
+            canvas.height = item.iconTexture.height;
+
+            const imageData = new ImageData(b, item.iconTexture.width, item.iconTexture.height);
+            ctx.putImageData(imageData, 0, 0);
+
+            img.src = canvas.toDataURL();
+        }
     },
 
     emits: {

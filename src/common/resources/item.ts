@@ -1,4 +1,5 @@
 import { lsb16, lsb24, lsb32, lsb8 } from '../bytes';
+import { Bmp2 } from './bmp2';
 import { decodeDmsgEntry, Entry as DmsgEntry } from './dmsg';
 import { Resource } from './resource';
 
@@ -50,13 +51,14 @@ export class ItemType0 extends Item {
     _unk2: number;
     stack: number;
     _unk4: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     _unk23: number;
     _unk32: number;
     _unk40: number;
     _unk41: number;
+
+    iconTexture: Bmp2 | null;
 
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
@@ -66,13 +68,19 @@ export class ItemType0 extends Item {
         this.stack = lsb16(b, 6);
         this._unk4 = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x18));
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk23 = lsb16(b, 0xe);
         this._unk32 = lsb16(b, 0x12);
         this._unk40 = lsb8(b, 0x15);
         this._unk41 = lsb16(b, 0x16);
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
@@ -89,7 +97,6 @@ export class ItemType1 extends Item {
     _unk2: number;
     stack: number;
     _unk4: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     _unk21: number;
@@ -100,6 +107,8 @@ export class ItemType1 extends Item {
     _unk59: number;
     _unk60: number;
 
+    iconTexture: Bmp2 | null;
+
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -108,7 +117,6 @@ export class ItemType1 extends Item {
         this.stack = lsb16(b, 6);
         this._unk4 = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x1c));
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk21 = lsb16(b, 0xe);
@@ -118,6 +126,13 @@ export class ItemType1 extends Item {
         this._unk58 = lsb8(b, 0x16);
         this._unk59 = lsb8(b, 0x17);
         this._unk60 = lsb8(b, 0x18);
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
@@ -137,10 +152,11 @@ export class ItemType2 extends Item {
     level: number;
     slots: number;
     jobs: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     _unk32: number;
+
+    iconTexture: Bmp2 | null;
 
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
@@ -153,10 +169,16 @@ export class ItemType2 extends Item {
         this.level = lsb16(b, 0x14);
         this.slots = lsb16(b, 0xe);
         this.jobs = lsb32(b, 0x10);
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk32 = lsb16(b, 0x16);
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
@@ -173,7 +195,6 @@ export class ItemType3 extends Item {
     _unk2: number;
     stack: number;
     _unk4: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     _unk23: number;
@@ -181,6 +202,8 @@ export class ItemType3 extends Item {
     _unk32: number;
     _unk40: number;
     _unk41: number;
+
+    iconTexture: Bmp2 | null;
 
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
@@ -190,7 +213,6 @@ export class ItemType3 extends Item {
         this.stack = lsb16(b, 6);
         this._unk4 = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x18));
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk23 = lsb16(b, 0xe);
@@ -198,6 +220,13 @@ export class ItemType3 extends Item {
         this._unk32 = lsb16(b, 0x12);
         this._unk40 = lsb8(b, 0x15);
         this._unk41 = lsb16(b, 0x16);
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
@@ -219,7 +248,6 @@ export class Armor extends Item {
     races: number;
     jobs: number;
     _unk11: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     _unk17: number;
@@ -235,6 +263,8 @@ export class Armor extends Item {
     _unk59: number;
     _unk60: number;
 
+    iconTexture: Bmp2 | null;
+
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -248,7 +278,6 @@ export class Armor extends Item {
         this.races = lsb16(b, 0x12);
         this.jobs = lsb32(b, 0x14);
         this._unk11 = lsb16(b, 0x18);
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk17 = lsb16(b, 0x1a);
@@ -263,6 +292,13 @@ export class Armor extends Item {
         this._unk58 = lsb8(b, 0x29);
         this._unk59 = lsb8(b, 0x2a);
         this._unk60 = lsb8(b, 0x2b);
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
@@ -285,7 +321,6 @@ export class Weapon extends Item {
     jobs: number;
     _unk11: number;
     skill: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     dmg: number;
@@ -304,6 +339,8 @@ export class Weapon extends Item {
     _unk59: number;
     _unk60: number;
 
+    iconTexture: Bmp2 | null;
+
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -318,7 +355,6 @@ export class Weapon extends Item {
         this.jobs = lsb32(b, 0x14);
         this._unk11 = lsb16(b, 0x18);
         this.skill = lsb16(b, 0x22);
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this.dmg = lsb16(b, 0x1c);
@@ -336,6 +372,13 @@ export class Weapon extends Item {
         this._unk58 = lsb8(b, 0x35);
         this._unk59 = lsb8(b, 0x36);
         this._unk60 = lsb8(b, 0x37);
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
@@ -352,12 +395,13 @@ export class ItemType6 extends Item {
     _unk2: number;
     stack: number;
     _unk4: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     _unk21: number;
     _unk31: number;
     _unk32: number;
+
+    iconTexture: Bmp2 | null;
 
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
@@ -367,12 +411,18 @@ export class ItemType6 extends Item {
         this.stack = lsb16(b, 6);
         this._unk4 = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x54));
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk21 = lsb16(b, 0xe);
         this._unk31 = lsb32(b, 0x14); // ???
         this._unk32 = lsb16(b, 0x10);
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
@@ -393,7 +443,6 @@ export class ItemType7 extends Item {
     slots: number;
     races: number;
     jobs: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     _unk26: number;
@@ -402,6 +451,8 @@ export class ItemType7 extends Item {
     _unk29: number;
     _unk30: number;
     _unk32: number;
+
+    iconTexture: Bmp2 | null;
 
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
@@ -415,7 +466,6 @@ export class ItemType7 extends Item {
         this.slots = lsb16(b, 0x10);
         this.races = lsb16(b, 0x12);
         this.jobs = lsb32(b, 0x14);
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk26 = lsb8(b, 0x1a);
@@ -424,6 +474,13 @@ export class ItemType7 extends Item {
         this._unk29 = lsb32(b, 0x20);
         this._unk30 = lsb16(b, 0x18);
         this._unk32 = lsb16(b, 0x24);
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
@@ -485,7 +542,6 @@ export class ItemType10 extends Item {
     _unk0: number;
     text: DmsgEntry;
     _unk2: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     _unk33: number;
@@ -494,13 +550,14 @@ export class ItemType10 extends Item {
     _unk36: number;
     _unk37: number;
 
+    iconTexture: Bmp2 | null;
+
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
         this._unk0 = lsb16(b, 0x26);
         this._unk2 = lsb16(b, 4);
         this.text = decodeDmsgEntry(b.slice(0x70));
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk33 = lsb32(b, 6); // ???
@@ -508,6 +565,13 @@ export class ItemType10 extends Item {
         this._unk35 = lsb16(b, 0x2c);
         this._unk36 = lsb16(b, 0x2e);
         this._unk37 = lsb32(b, 0x30); // ???
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
@@ -607,10 +671,11 @@ export class Gil extends Item {
     _unk2: number;
     stack: number;
     _unk4: number;
-    _unk14: number;
     _unk15: number;
     _unk16: number;
     _unk32: number;
+
+    iconTexture: Bmp2 | null;
 
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
@@ -620,10 +685,16 @@ export class Gil extends Item {
         this.stack = lsb16(b, 6);
         this._unk4 = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x10));
-        this._unk14 = lsb32(b, 0x280);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk32 = lsb16(b, 0xe);
+
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
     }
 
     get itemName() {
