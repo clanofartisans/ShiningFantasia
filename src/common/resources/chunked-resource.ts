@@ -1,4 +1,4 @@
-import { lsb32 } from '../bytes';
+import { lsb8, lsb32 } from '../bytes';
 import { Resource } from './resource';
 import { decodeString } from '../string';
 
@@ -311,6 +311,78 @@ export interface Entry {
     temp: Buffer;
 }
 
+function decodeMgc_(b: Buffer) {
+    if ((b.length % 100) !== 0) {
+        return b;
+    }
+
+    const bits = [
+        0, // 0
+        1, // 1
+        1, // 2
+        2, // 3
+        1, // 4
+        2, // 5
+        2, // 6
+        3, // 7
+        1, // 8
+        2, // 9
+        2, // 10
+        3, // 11
+        2, // 12
+        3, // 13
+        3, // 14
+        4, // 15
+    ];
+
+    for (let i = 0; i < b.length; i += 100) {
+        const x = lsb8(b, i + 2);
+        const y = lsb8(b, i + 11);
+        const z = lsb8(b, i + 12);
+
+        const xBits = bits[x & 0xf] + bits[x >> 4];
+        const yBits = bits[y & 0xf] + bits[y >> 4];
+        const zBits = bits[z & 0xf] + bits[z >> 4];
+
+        const pop = Math.abs(xBits + zBits - yBits);
+        const rot = pop % 5;
+
+        for (let j = 0; j < 100; j++) {
+            if (((j != 2) && (j != 0xb)) && (j != 0xc)) {
+                const v = b[i + j];
+                let l = 0;
+                let r = 0;
+
+                switch(rot) {
+                    case 0:
+                        l = v >> 7;
+                        r = v << 1;
+                        break;
+                    case 1:
+                        l = v << 7;
+                        r = v >> 1;
+                        break;
+                    case 2:
+                        l = v >> 6;
+                        r = v << 2;
+                        break;
+                    case 3:
+                        l = v << 6;
+                        r = v >> 2;
+                        break;
+                    case 4:
+                        l = v >> 5;
+                        r = v << 3;
+                        break;
+                }
+                b[i + j] = l | r;
+            }
+        }
+    }
+
+   return b;
+}
+
 export class ChunkedResource {
     resources: Entry[];
 
@@ -339,8 +411,13 @@ export class ChunkedResource {
             }
 
             offset += 16;
-            const resBuf = b.slice(offset, offset + length);
+            let resBuf = b.slice(offset, offset + length);
             offset += length;
+
+            // Hack in some automatic decoding of the spell info resource
+            if (type === ChunkedResourceType.Mgb && name === 'mgc_') {
+                resBuf = decodeMgc_(resBuf);
+            }
 
             const constructor = resourceConstructors[type];
 
