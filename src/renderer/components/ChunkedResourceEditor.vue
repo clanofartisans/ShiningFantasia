@@ -1,22 +1,11 @@
 <template>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col" style="width: 100px">Id</th>
-                <th scope="col">Type</th>
-                <th scope="col">Name</th>
-                <th scope="col">Length</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="({ type, name, length }, id) in resourceList.resources">
-                <td>{{ id }}</td>
-                <td>{{ getTypeName(type) }}</td>
-                <td>{{ name }}</td>
-                <td>{{ length }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <label for="item-select" class="form-label">Select Item</label>
+    <select id="item-select" class="form-control" required v-model="resourceIndex">
+        <option v-for="(i, index) in resourceList.resources" v-bind:value="index">{{ index }}: {{ getTypeName(i.type) }} - {{ i.name }} ({{ i.length }})</option>
+    </select>
+
+    <pre><code>{{ dump }} </code></pre>
+
 </template>
 
 <script lang="ts">
@@ -24,8 +13,16 @@ import { defineComponent, PropType } from 'vue';
 
 import { Resource, ChunkedResource } from '@common/resources';
 
+import { dumpBinToStr } from '@common/datloader';
+
 export default defineComponent({
     created() {
+    },
+
+    data() {
+        return {
+            resourceIndex: null as number | null,
+        }
     },
 
     props: {
@@ -38,6 +35,15 @@ export default defineComponent({
     computed: {
         resourceList() {
             return this.resource as ChunkedResource;
+        },
+
+        dump() {
+            if (this.resourceIndex !== null) {
+                if (this.resourceIndex >= 0 && this.resourceIndex <= this.resourceList.resources.length) {
+                    return dumpBinToStr(this.resourceList.resources[this.resourceIndex].temp);
+                }
+            }
+            return '';
         }
     },
 

@@ -308,6 +308,7 @@ export interface Entry {
     name: string;
     length: number,
     resource: Resource | null;
+    temp: Buffer;
 }
 
 export class ChunkedResource {
@@ -349,6 +350,7 @@ export class ChunkedResource {
                     name,
                     length,
                     resource: null,
+                    temp: resBuf,
                 });
             } else {
                 const resource = new constructor({
@@ -361,6 +363,7 @@ export class ChunkedResource {
                     name,
                     length,
                     resource,
+                    temp: resBuf,
                 });
             }
         }
