@@ -7,3 +7,5 @@ export { default as XiStringEditor } from './XiStringEditor.vue';
 
 export { default as ItemEditor } from './ItemEditor.vue';
 export { default as ItemDatabaseEditor } from './ItemDatabaseEditor.vue';
+
+export { default as ChunkedResourceEditor } from './ChunkedResourceEditor.vue';

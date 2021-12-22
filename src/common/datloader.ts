@@ -1,6 +1,7 @@
 import { ResourceEntry, ResourceType } from './database';
 import {
     Resource,
+    ChunkedResource,
     Dmsg,
     EntityList,
     EventMessage,
@@ -122,6 +123,8 @@ function getConstructor(entry: ResourceEntry) {
         case ResourceType.Dmsg:
         default:
             return Dmsg;
+        case ResourceType.ChunkedResource:
+            return ChunkedResource;
         case ResourceType.EntityList:
             return EntityList;
         case ResourceType.EventMessage:

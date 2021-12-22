@@ -1,4 +1,5 @@
 export enum ResourceType {
+    ChunkedResource,
     Dmsg,
     EntityList,
     EventMessage,
@@ -43,20 +44,20 @@ const commonResources: ResourceEntry[] = [
     // { fileId: 0x1B7D, description: '<Unknown>' }, // Region table for regions 100+
 
     // Need to be categorized
-    { fileId: 0xd8c9, type: ResourceType.Dmsg,          description: '<Unknown>' }, // - / -
-    { fileId: 0xd8ca, type: ResourceType.Dmsg,          description: '<Unknown>' }, // - / -
-    { fileId: 0xd8a9, type: ResourceType.Dmsg,          description: '<Unknown>' }, // - / 5
-    { fileId: 0xd8aa, type: ResourceType.Dmsg,          description: '<Unknown>' }, // - / 4
-    { fileId: 0xd8af, type: ResourceType.Dmsg,          description: '<Unknown>' }, // - / 24
-    { fileId: 0xd8b0, type: ResourceType.Dmsg,          description: '<Unknown>' }, // - / 25
-    { fileId: 0xd8ac, type: ResourceType.Dmsg,          description: '<Unknown>' }, // - / 2
+    { fileId: 0xd8c9, type: ResourceType.Dmsg,             description: '<Unknown>' }, // - / -
+    { fileId: 0xd8ca, type: ResourceType.Dmsg,             description: '<Unknown>' }, // - / -
+    { fileId: 0xd8a9, type: ResourceType.Dmsg,             description: 'Zone Names' }, // - / 5
+    { fileId: 0xd8aa, type: ResourceType.Dmsg,             description: 'Zone Names (Short)' }, // - / 4
+    { fileId: 0xd8af, type: ResourceType.Dmsg,             description: 'Slot Names' }, // - / 24
+    { fileId: 0xd8b0, type: ResourceType.Dmsg,             description: 'Einherjar Chambers' }, // - / 25
+    { fileId: 0xd8ac, type: ResourceType.Dmsg,             description: 'Job Names (Short)' }, // - / 2
 
     // Localized resources
-    { fileId: 0x9A76,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 0
-    { fileId: 0x9A75,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 1
+    { fileId: 0x9A76,  type: ResourceType.ChunkedResource, description: 'Resource - <Unknown>' }, // 0
+    { fileId: 0x9A75,  type: ResourceType.ChunkedResource, description: 'Resource - <Unknown>' }, // 1
     { fileId: 0xD8AD,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 2 / 6
     { fileId: 0xD8AE,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 3 / 1
-    { fileId: 0xD8AB,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 4 / 3
+    { fileId: 0xD8AB,  type: ResourceType.Dmsg,         description: 'Job Names' }, // 4 / 3
     { fileId: 0x3F,    type: ResourceType.XiString,     description: '<Unknown>' }, // 5 / 0
     { fileId: 0xD95D,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 6 / 27
     { fileId: 0xD95E,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 7 / 7
@@ -140,8 +141,8 @@ const commonResources: ResourceEntry[] = [
     { fileId: 0xD9BE,  type: ResourceType.Dmsg,         description: '<Unknown>' }, // 85
     { fileId: 0xD9BB,  type: ResourceType.Dmsg,         description: 'Quests - Seekers of Adoulin' }, // 86
     { fileId: 0xD9BC,  type: ResourceType.Dmsg,         description: 'Quests - Coalition Assignments' }, // 87
-    { fileId: 0x52,    type: ResourceType.Dmsg,         description: 'Resource - <Unknown>' }, // 88
-    { fileId: 0x51,    type: ResourceType.Dmsg,         description: 'Resource - <Unknown>' }, // 89
+    { fileId: 0x52,    type: ResourceType.ChunkedResource, description: 'Resource - <Unknown>' }, // 88
+    { fileId: 0x51,    type: ResourceType.ChunkedResource, description: 'Resource - <Unknown>' }, // 89
     { fileId: 0xD9B4,  type: ResourceType.Dmsg,         description: 'Status Names with Adjectives' }, // 90
     { fileId: 0xD996,  type: ResourceType.Dmsg,         description: 'Spell Names' }, // 91
     { fileId: 0xD9B6,  type: ResourceType.Dmsg,         description: 'Spell Help Text' }, // 92

@@ -21,6 +21,12 @@
     </div>
 
     <div class="container-fluid">
+        <template v-if="chunkedResourceEditor">
+            <ChunkedResourceEditor
+                :resource="resource!"
+            />
+        </template>
+
         <template v-if="dmsgEditor">
             <DmsgEditor
                 :resource="resource!"
@@ -61,6 +67,7 @@ import { ResourceEntry, ResourceType } from '@common/database';
 import { Resource } from '@common/resources';
 
 import {
+    ChunkedResourceEditor,
     DmsgEditor,
     EntityListEditor,
     EventMessageEditor,
@@ -70,6 +77,7 @@ import {
 } from '@components';
 
 enum AppState {
+    ChunkedResourceEditor = 'CHUNKED_RESOURCE_EDITOR',
     DmsgEditor = 'DMSG_EDITOR',
     EntityListEditor = 'ENTITY_LIST_EDITOR',
     EventMessageEditor = 'EVENT_MESSAGE_EDITOR',
@@ -88,6 +96,7 @@ interface Data {
 
 export default defineComponent({
     components: {
+        ChunkedResourceEditor,
         DmsgEditor,
         EntityListEditor,
         EventMessageEditor,
@@ -116,6 +125,10 @@ export default defineComponent({
     computed: {
         none() : boolean {
             return this.appState === AppState.None;
+        },
+
+        chunkedResourceEditor() : boolean {
+            return this.appState === AppState.ChunkedResourceEditor;
         },
 
         dmsgEditor() : boolean {
@@ -147,6 +160,9 @@ export default defineComponent({
                     this.resource = resource;
 
                     switch (this.entry.type) {
+                        case ResourceType.ChunkedResource:
+                            this.appState = AppState.ChunkedResourceEditor;
+                            break;
                         case ResourceType.Dmsg:
                         default:
                             this.appState = AppState.DmsgEditor;
