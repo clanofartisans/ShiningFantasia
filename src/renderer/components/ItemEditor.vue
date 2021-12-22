@@ -1,6 +1,6 @@
 <template>
     <template v-if="item">
-        <img ref="item-icon">
+        <img :src="iconSrc">
 
         <table class="table table-hover">
             <thead>
@@ -439,45 +439,31 @@ export default defineComponent({
         },
     },
 
-    watch: {
-        item: function (item) {
-            const img : HTMLImageElement = this.$refs['item-icon'] as HTMLImageElement;
-            if (!img) {
-                return;
+    computed: {
+        iconSrc() : string {
+            const item = this.item;
+
+            if (item?.iconTexture) {
+                const b = item.iconTexture.getRGBABuffer();
+
+                if (b) {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    if (ctx) {
+                        canvas.width = item.iconTexture.width;
+                        canvas.height = item.iconTexture.height;
+
+                        const imageData = new ImageData(b, item.iconTexture.width, item.iconTexture.height);
+                        ctx.putImageData(imageData, 0, 0);
+
+                        return canvas.toDataURL();
+                    }
+                }
             }
 
-            img.src = '';
-
-            if (!item) {
-                return;
-            }
-            if (!item?.iconTexture) {
-                return;
-            }
-
-            const b = item.iconTexture.getRGBABuffer();
-            if (!b) {
-                return;
-            }
-
-            const canvas = document.createElement('canvas');
-            if (!canvas) {
-                return;
-            }
-
-            const ctx = canvas.getContext('2d');
-            if (!ctx) {
-                return;
-            }
-
-            canvas.width = item.iconTexture.width;
-            canvas.height = item.iconTexture.height;
-
-            const imageData = new ImageData(b, item.iconTexture.width, item.iconTexture.height);
-            ctx.putImageData(imageData, 0, 0);
-
-            img.src = canvas.toDataURL();
-        }
+            return '';
+        },
     },
 
     emits: {
