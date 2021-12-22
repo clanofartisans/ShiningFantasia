@@ -128,21 +128,29 @@ export class Bmp2 {
             return null;
         }
 
-        const uncompressedSize = this.paletteBitsPerPixel * this.width * this.height / 8;
+        const width = this.width;
+        const height = this.height;
+
+        const uncompressedSize = this.paletteBitsPerPixel * width * height / 8;
         const b =  new Uint8ClampedArray(uncompressedSize);
 
         let offset = 0;
 
-        for (let i = this.texture.length - 1; i >= 0; i--) {
-            const p = this.texture[i];
+        // Flip the image
+        for (let y = height - 1; y >= 0; y--) {
+            for (let x = 0; x < width; x++) {
+                const p = this.texture[y * width + x];
 
-            // BGRA -> RGBA, while also flipping the image
-            b[offset + 0] = this.palette[p * 4 + 2];
-            b[offset + 1] = this.palette[p * 4 + 1];
-            b[offset + 2] = this.palette[p * 4 + 0];
-            b[offset + 3] = this.palette[p * 4 + 3] * 255 / 128;
+                // BGRA -> RGBA
+                b[offset + 0] = this.palette[p * 4 + 2];
+                b[offset + 1] = this.palette[p * 4 + 1];
+                b[offset + 2] = this.palette[p * 4 + 0];
 
-            offset += 4;
+                // rescale alpha for the icon textures
+                b[offset + 3] = this.palette[p * 4 + 3] * 255 / 128;
+
+                offset += 4;
+            }
         }
 
         return b;
