@@ -433,9 +433,7 @@ export default defineComponent({
 
     props: {
         item: {
-            // todo - remove the any hack once each item type
-            // has its own edit component
-            type: Object as PropType<any/*Item*/>,
+            type: Object as PropType<Item>,
         },
     },
 

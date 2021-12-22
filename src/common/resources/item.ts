@@ -31,6 +31,65 @@ export class Item {
 
     debug?: string;
 
+    _unk0?: number;
+    text?: DmsgEntry;
+    _unk2?: number;
+    stack?: number;
+    _unk4?: number;
+    level?: number;
+    slots?: number;
+    races?: number;
+    jobs?: number;
+    _unk11?: number;
+    skill?: number;
+    _unk15?: number;
+    _unk16?: number;
+    _unk17?: number;
+    dmg?: number;
+    delay?: number;
+    _unk20?: number;
+    _unk21?: number;
+    _unk23?: number;
+    _unk24?: number;
+    _unk25?: number;
+    _unk26?: number;
+    _unk27?: number;
+    _unk28?: number;
+    _unk29?: number;
+    _unk30?: number;
+    _unk31?: number;
+    _unk32?: number;
+    _unk33?: number;
+    _unk34?: number;
+    _unk35?: number;
+    _unk36?: number;
+    _unk37?: number;
+    _unk38?: number;
+    _unk39?: number;
+    _unk40?: number;
+    _unk41?: number;
+    _unk42?: number;
+    _unk43?: number;
+    _unk44?: number;
+    _unk45?: number;
+    _unk46?: number;
+    _unk47?: number;
+    _unk48?: number;
+    _unk49?: number;
+    _unk50?: number;
+    _unk51?: number;
+    _unk52?: number;
+    _unk53?: number;
+    _unk54?: number;
+    _unk55?: number;
+    _unk56?: number;
+    _unk57?: number;
+    _unk58?: number;
+    _unk59?: number;
+    _unk60?: number;
+
+    iconTexture?: Bmp2 | null;
+
     constructor(id: number, type: ItemType, b?: Buffer) {
         this.id = id;
         this.type = type;
@@ -40,26 +99,29 @@ export class Item {
         }
     }
 
-    get itemName() : string {
-        return '<Unknown>';
+    initIcon(b: Buffer, offset: number) {
+        const bmp2Length = lsb32(b, 0x280);
+        if (bmp2Length > 0) {
+            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+        } else {
+            this.iconTexture = null;
+        }
+    }
+
+    get itemName() {
+        if (!this.text) {
+            return '<Unknown>';
+        }
+
+        if (this.text.length > 0 && typeof this.text[0] === 'string') {
+            return this.text[0];
+        }
+
+        return '';
     }
 }
 
 export class ItemType0 extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    stack: number;
-    _unk4: number;
-    _unk15: number;
-    _unk16: number;
-    _unk23: number;
-    _unk32: number;
-    _unk40: number;
-    _unk41: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -75,40 +137,11 @@ export class ItemType0 extends Item {
         this._unk40 = lsb8(b, 0x15);
         this._unk41 = lsb16(b, 0x16);
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
 export class ItemType1 extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    stack: number;
-    _unk4: number;
-    _unk15: number;
-    _unk16: number;
-    _unk21: number;
-    _unk32: number;
-    _unk40: number;
-    _unk41: number;
-    _unk58: number;
-    _unk59: number;
-    _unk60: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -127,37 +160,11 @@ export class ItemType1 extends Item {
         this._unk59 = lsb8(b, 0x17);
         this._unk60 = lsb8(b, 0x18);
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
 export class ItemType2 extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    stack: number;
-    _unk4: number;
-    level: number;
-    slots: number;
-    jobs: number;
-    _unk15: number;
-    _unk16: number;
-    _unk32: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -173,38 +180,11 @@ export class ItemType2 extends Item {
         this._unk16 = lsb16(b, 0xa);
         this._unk32 = lsb16(b, 0x16);
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
 export class ItemType3 extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    stack: number;
-    _unk4: number;
-    _unk15: number;
-    _unk16: number;
-    _unk23: number;
-    _unk24: number;
-    _unk32: number;
-    _unk40: number;
-    _unk41: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -221,50 +201,11 @@ export class ItemType3 extends Item {
         this._unk40 = lsb8(b, 0x15);
         this._unk41 = lsb16(b, 0x16);
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
 export class Armor extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    stack: number;
-    _unk4: number;
-    level: number;
-    slots: number;
-    races: number;
-    jobs: number;
-    _unk11: number;
-    _unk15: number;
-    _unk16: number;
-    _unk17: number;
-    _unk26: number;
-    _unk27: number;
-    _unk28: number;
-    _unk29: number;
-    _unk32: number;
-    _unk38: number;
-    _unk39: number;
-    _unk52: number;
-    _unk58: number;
-    _unk59: number;
-    _unk60: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -293,54 +234,11 @@ export class Armor extends Item {
         this._unk59 = lsb8(b, 0x2a);
         this._unk60 = lsb8(b, 0x2b);
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
 export class Weapon extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    stack: number;
-    _unk4: number;
-    level: number;
-    slots: number;
-    races: number;
-    jobs: number;
-    _unk11: number;
-    skill: number;
-    _unk15: number;
-    _unk16: number;
-    dmg: number;
-    delay: number;
-    _unk20: number;
-    _unk25: number;
-    _unk26: number;
-    _unk27: number;
-    _unk28: number;
-    _unk29: number;
-    _unk32: number;
-    _unk38: number;
-    _unk39: number;
-    _unk52: number;
-    _unk58: number;
-    _unk59: number;
-    _unk60: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -373,36 +271,11 @@ export class Weapon extends Item {
         this._unk59 = lsb8(b, 0x36);
         this._unk60 = lsb8(b, 0x37);
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
 export class ItemType6 extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    stack: number;
-    _unk4: number;
-    _unk15: number;
-    _unk16: number;
-    _unk21: number;
-    _unk31: number;
-    _unk32: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -417,43 +290,11 @@ export class ItemType6 extends Item {
         this._unk31 = lsb32(b, 0x14); // ???
         this._unk32 = lsb16(b, 0x10);
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
 export class ItemType7 extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    stack: number;
-    _unk4: number;
-    level: number;
-    slots: number;
-    races: number;
-    jobs: number;
-    _unk15: number;
-    _unk16: number;
-    _unk26: number;
-    _unk27: number;
-    _unk28: number;
-    _unk29: number;
-    _unk30: number;
-    _unk32: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -475,33 +316,11 @@ export class ItemType7 extends Item {
         this._unk30 = lsb16(b, 0x18);
         this._unk32 = lsb16(b, 0x24);
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
 export class ItemType8 extends Item {
-    text: DmsgEntry;
-    _unk15: number;
-    _unk42: number;
-    _unk43: number;
-    _unk44: number;
-    _unk45: number;
-    _unk46: number;
-    _unk47: number;
-    _unk48: number;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -515,20 +334,9 @@ export class ItemType8 extends Item {
         this._unk47 = lsb32(b, 0x18);
         this._unk48 = lsb32(b, 0x1c);
     }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
-    }
 }
 
 export class ItemType9 extends Item {
-    _unk15: number;
-    _unk31: number;
-    _unk50: number;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -539,19 +347,6 @@ export class ItemType9 extends Item {
 }
 
 export class ItemType10 extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    _unk15: number;
-    _unk16: number;
-    _unk33: number;
-    _unk34: number;
-    _unk35: number;
-    _unk36: number;
-    _unk37: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -566,28 +361,11 @@ export class ItemType10 extends Item {
         this._unk36 = lsb16(b, 0x2e);
         this._unk37 = lsb32(b, 0x30); // ???
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
 export class ItemType11 extends Item {
-    text: DmsgEntry;
-    _unk15: number;
-    _unk31: number;
-    _unk49: number;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -596,19 +374,9 @@ export class ItemType11 extends Item {
         this._unk31 = lsb32(b, 8); // ???
         this._unk49 = lsb32(b, 4);
     }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
-    }
 }
 
 export class ItemType12 extends Item {
-    _unk15: number;
-    _unk51: number;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -618,12 +386,6 @@ export class ItemType12 extends Item {
 }
 
 export class ItemType13 extends Item {
-    text: DmsgEntry;
-    _unk15: number;
-    _unk55: number;
-    _unk56: number;
-    _unk57: number;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -633,21 +395,9 @@ export class ItemType13 extends Item {
         this._unk56 = lsb16(b, 6);
         this._unk57 = lsb32(b, 8); // ???
     }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
-    }
 }
 
 export class ItemType14 extends Item {
-    text: DmsgEntry;
-    _unk15: number;
-    _unk53: number;
-    _unk54: number;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -656,27 +406,9 @@ export class ItemType14 extends Item {
         this._unk53 = lsb8(b, 4);
         this._unk54 = lsb24(b, 5); // ???
     }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
-    }
 }
 
 export class Gil extends Item {
-    _unk0: number;
-    text: DmsgEntry;
-    _unk2: number;
-    stack: number;
-    _unk4: number;
-    _unk15: number;
-    _unk16: number;
-    _unk32: number;
-
-    iconTexture: Bmp2 | null;
-
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
@@ -689,19 +421,7 @@ export class Gil extends Item {
         this._unk16 = lsb16(b, 0xa);
         this._unk32 = lsb16(b, 0xe);
 
-        const bmp2Length = lsb32(b, 0x280);
-        if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
-        } else {
-            this.iconTexture = null;
-        }
-    }
-
-    get itemName() {
-        if (this.text.length > 0 && typeof this.text[0] === 'string') {
-            return this.text[0];
-        }
-        return '';
+        this.initIcon(b, 0x280);
     }
 }
 
