@@ -119,6 +119,10 @@ function getTarget({ production, target, entry, output, templates, tsconfig }) {
 
         t.plugins = [
             new webpack.ProgressPlugin(),
+            new webpack.DefinePlugin({
+                __VUE_OPTIONS_API__: true,
+                __VUE_PROD_DEVTOOLS__: false,
+            }),
             new CopyPlugin({
                 patterns: [
                     { from: `${path.resolve(__dirname, './src/resources/icon.png')}`, to: `${path.resolve(__dirname, './build/icon.png')}` },
