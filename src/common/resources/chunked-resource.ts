@@ -2,6 +2,8 @@ import { lsb8, lsb32 } from '../bytes';
 import { Resource } from './resource';
 import { decodeString } from '../string';
 
+import { Bmp2 } from './bmp2';
+
 export enum ChunkedResourceType {
     Terminate = 0,
     Rmp = 1,
@@ -232,12 +234,12 @@ const resourceConstructors: ResourceConstructorEntry[] = [
     null, // "Tim2",
     null, // "KeyFrame",
     null, // "Bmp",
-    null, // "Bmp2",
+    Bmp2, // "Bmp2",
     null, // "Mzb",
     null, // "Mmd",
     null, // "Mep",
     null, // "D3m",
-    null, // "D3s",
+    Bmp2, // "D3s",
     null, // "D3a",
     null, // "DistProg",
     null, // "VuLineProg",
@@ -430,10 +432,7 @@ export class ChunkedResource {
                     temp: resBuf,
                 });
             } else {
-                const resource = new constructor({
-                    type,
-                    length,
-                }, resBuf, length);
+                const resource = new constructor(resBuf);
 
                 this.resources.push({
                     type,
