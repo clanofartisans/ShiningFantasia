@@ -3,7 +3,7 @@ import { Bmp2 } from './bmp2';
 import { decodeDmsgEntry, Entry as DmsgEntry } from './dmsg';
 import { Resource } from './resource';
 
-import { dumpBinToStr } from '../datloader';
+import { dumpBinToStr } from '../util';
 
 export enum ItemType {
     ItemType0,
@@ -89,6 +89,7 @@ export class Item {
     _unk60?: number;
 
     iconTexture?: Bmp2 | null;
+    iconTextureBase64?: string;
 
     constructor(id: number, type: ItemType, b?: Buffer) {
         this.id = id;
@@ -102,7 +103,10 @@ export class Item {
     initIcon(b: Buffer, offset: number) {
         const bmp2Length = lsb32(b, 0x280);
         if (bmp2Length > 0) {
-            this.iconTexture = new Bmp2(b.slice(0x284, 0x284 + bmp2Length));
+            const iconBuffer = b.slice(0x284, 0x284 + bmp2Length);
+
+            this.iconTexture = new Bmp2(iconBuffer);
+            this.iconTextureBase64 = iconBuffer.toString('base64');
         } else {
             this.iconTexture = null;
         }
