@@ -31,17 +31,17 @@
                     </tr>
                 </template>
 
-                <template v-if="item?._unk0 !== undefined">
+                <template v-if="item?.kind !== undefined">
                     <tr>
-                        <td>_unk0</td>
-                        <td>{{ _04X(item._unk0) }}</td>
+                        <td>kind</td>
+                        <td>{{ _04X(item.kind) }}</td>
                     </tr>
                 </template>
 
-                <template v-if="item?._unk2 !== undefined">
+                <template v-if="item?.flags !== undefined">
                     <tr>
-                        <td>_unk2</td>
-                        <td>{{ _04X(item._unk2) }}</td>
+                        <td>flags</td>
+                        <td>{{ _04X(item.flags) }}</td>
                     </tr>
                 </template>
 
@@ -52,10 +52,10 @@
                     </tr>
                 </template>
 
-                <template v-if="item?._unk4 !== undefined">
+                <template v-if="item?.targets !== undefined">
                     <tr>
-                        <td>_unk4</td>
-                        <td>{{ _04X(item._unk4) }}</td>
+                        <td>targets</td>
+                        <td>{{ _04X(item.targets) }}</td>
                     </tr>
                 </template>
 
@@ -87,10 +87,10 @@
                     </tr>
                 </template>
 
-                <template v-if="item?._unk11 !== undefined">
+                <template v-if="item?.slvl !== undefined">
                     <tr>
-                        <td>_unk11</td>
-                        <td>{{ _04X(item._unk11) }}</td>
+                        <td>slvl</td>
+                        <td>{{ _04X(item.slvl) }}</td>
                     </tr>
                 </template>
 
@@ -115,10 +115,10 @@
                     </tr>
                 </template>
 
-                <template v-if="item?._unk17 !== undefined">
+                <template v-if="item?.shieldSize !== undefined">
                     <tr>
-                        <td>_unk17</td>
-                        <td>{{ _04X(item._unk17) }}</td>
+                        <td>shieldSize</td>
+                        <td>{{ _04X(item.shieldSize) }}</td>
                     </tr>
                 </template>
 
@@ -136,10 +136,10 @@
                     </tr>
                 </template>
 
-                <template v-if="item?._unk20 !== undefined">
+                <template v-if="item?.dps !== undefined">
                     <tr>
-                        <td>_unk20</td>
-                        <td>{{ _04X(item._unk20) }}</td>
+                        <td>dps</td>
+                        <td>{{ _04X(item.dps) }}</td>
                     </tr>
                 </template>
 
@@ -164,10 +164,10 @@
                     </tr>
                 </template>
 
-                <template v-if="item?._unk25 !== undefined">
+                <template v-if="item?.emote !== undefined">
                     <tr>
                         <td>_unk24</td>
-                        <td>{{ _08X(item._unk25) }}</td>
+                        <td>{{ _08X(item.emote) }}</td>
                     </tr>
                 </template>
 
@@ -260,10 +260,10 @@
                     </tr>
                 </template>
 
-                <template v-if="item?._unk39 !== undefined">
+                <template v-if="item?.ilvl !== undefined">
                     <tr>
-                        <td>_unk39</td>
-                        <td>{{ _02X(item._unk39) }}</td>
+                        <td>ilvl</td>
+                        <td>{{ _02X(item.ilvl) }}</td>
                     </tr>
                 </template>
 

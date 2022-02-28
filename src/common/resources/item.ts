@@ -31,27 +31,27 @@ export class Item {
 
     debug?: string;
 
-    _unk0?: number;
+    kind?: number;
     text?: DmsgEntry;
-    _unk2?: number;
+    flags?: number;
     stack?: number;
-    _unk4?: number;
+    targets?: number;
     level?: number;
     slots?: number;
     races?: number;
     jobs?: number;
-    _unk11?: number;
+    slvl?: number;
     skill?: number;
     _unk15?: number;
     _unk16?: number;
-    _unk17?: number;
+    shieldSize?: number;
     dmg?: number;
     delay?: number;
-    _unk20?: number;
+    dps?: number;
     _unk21?: number;
     _unk23?: number;
     _unk24?: number;
-    _unk25?: number;
+    emote?: number;
     _unk26?: number;
     _unk27?: number;
     _unk28?: number;
@@ -65,7 +65,7 @@ export class Item {
     _unk36?: number;
     _unk37?: number;
     _unk38?: number;
-    _unk39?: number;
+    ilvl?: number;
     _unk40?: number;
     _unk41?: number;
     _unk42?: number;
@@ -129,10 +129,10 @@ export class ItemType0 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 = lsb16(b, 8);
-        this._unk2 = lsb16(b, 4);
+        this.kind = lsb16(b, 8);
+        this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
-        this._unk4 = lsb16(b, 0xc);
+        this.targets = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x18));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
@@ -149,10 +149,10 @@ export class ItemType1 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 = lsb16(b, 8);
-        this._unk2 = lsb16(b, 4);
+        this.kind = lsb16(b, 8);
+        this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
-        this._unk4 = lsb16(b, 0xc);
+        this.targets = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x1c));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
@@ -172,10 +172,10 @@ export class ItemType2 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 = lsb16(b, 8);
-        this._unk2 = lsb16(b, 4);
+        this.kind = lsb16(b, 8);
+        this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
-        this._unk4 = lsb16(b, 0xc);
+        this.targets = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x18));
         this.level = lsb16(b, 0x14);
         this.slots = lsb16(b, 0xe);
@@ -192,10 +192,10 @@ export class ItemType3 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 = lsb16(b, 8);
-        this._unk2 = lsb16(b, 4);
+        this.kind = lsb16(b, 8);
+        this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
-        this._unk4 = lsb16(b, 0xc);
+        this.targets = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x18));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
@@ -213,26 +213,26 @@ export class Armor extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 = lsb16(b, 8);
-        this._unk2 = lsb16(b, 4);
+        this.kind = lsb16(b, 8);
+        this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
-        this._unk4 = lsb16(b, 0xc);
+        this.targets = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x2c));
         this.level = lsb16(b, 0xe);
         this.slots = lsb16(b, 0x10);
         this.races = lsb16(b, 0x12);
         this.jobs = lsb32(b, 0x14);
-        this._unk11 = lsb16(b, 0x18);
+        this.slvl = lsb16(b, 0x18);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
-        this._unk17 = lsb16(b, 0x1a);
+        this.shieldSize = lsb16(b, 0x1a);
         this._unk26 = lsb8(b, 0x1c);
         this._unk27 = lsb8(b, 0x1d);
         this._unk28 = lsb16(b, 0x1e);
         this._unk29 = lsb32(b, 0x20);
         this._unk32 = lsb16(b, 0x24);
         this._unk38 = lsb8(b, 0x27);
-        this._unk39 = lsb8(b, 0x26);
+        this.ilvl = lsb8(b, 0x26);
         this._unk52 = lsb8(b, 0x28);
         this._unk58 = lsb8(b, 0x29);
         this._unk59 = lsb8(b, 0x2a);
@@ -246,30 +246,30 @@ export class Weapon extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 = lsb16(b, 8);
-        this._unk2 = lsb16(b, 4);
+        this.kind = lsb16(b, 8);
+        this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
-        this._unk4 = lsb16(b, 0xc);
+        this.targets = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x38));
         this.level = lsb16(b, 0xe);
         this.slots = lsb16(b, 0x10);
         this.races = lsb16(b, 0x12);
         this.jobs = lsb32(b, 0x14);
-        this._unk11 = lsb16(b, 0x18);
+        this.slvl = lsb16(b, 0x18);
         this.skill = lsb16(b, 0x22);
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this.dmg = lsb16(b, 0x1c);
         this.delay = lsb16(b, 0x1e);
-        this._unk20 = lsb16(b, 0x20);
-        this._unk25 = lsb32(b, 0x24);
+        this.dps = lsb16(b, 0x20);
+        this.emote = lsb32(b, 0x24);
         this._unk26 = lsb8(b, 0x28);
         this._unk27 = lsb8(b, 0x29);
         this._unk28 = lsb16(b, 0x2a);
         this._unk29 = lsb32(b, 0x2c);
         this._unk32 = lsb16(b, 0x30);
         this._unk38 = lsb8(b, 0x33);
-        this._unk39 = lsb8(b, 0x32);
+        this.ilvl = lsb8(b, 0x32);
         this._unk52 = lsb8(b, 0x34);
         this._unk58 = lsb8(b, 0x35);
         this._unk59 = lsb8(b, 0x36);
@@ -283,10 +283,10 @@ export class ItemType6 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 = lsb16(b, 8);
-        this._unk2 = lsb16(b, 4);
+        this.kind = lsb16(b, 8);
+        this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
-        this._unk4 = lsb16(b, 0xc);
+        this.targets = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x54));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
@@ -302,10 +302,10 @@ export class ItemType7 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 =  lsb16(b, 8);
-        this._unk2 = lsb16(b, 4);
+        this.kind =  lsb16(b, 8);
+        this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
-        this._unk4 = lsb16(b, 0xc);
+        this.targets = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x28));
         this.level = lsb16(b, 0xe);
         this.slots = lsb16(b, 0x10);
@@ -354,8 +354,8 @@ export class ItemType10 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 = lsb16(b, 0x26);
-        this._unk2 = lsb16(b, 4);
+        this.kind = lsb16(b, 0x26);
+        this.flags = lsb16(b, 4);
         this.text = decodeDmsgEntry(b.slice(0x70));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
@@ -416,10 +416,10 @@ export class Gil extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this._unk0 = lsb16(b, 8);
-        this._unk2 = lsb16(b, 4);
+        this.kind = lsb16(b, 8);
+        this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
-        this._unk4 = lsb16(b, 0xc);
+        this.targets = lsb16(b, 0xc);
         this.text = decodeDmsgEntry(b.slice(0x10));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
