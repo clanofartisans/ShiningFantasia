@@ -64,6 +64,7 @@ const raceBits = {
     TARU_F: 64,
     MITHRA: 128,
     GALKA: 256,
+    VIERA: 512,
 };
 
 const jobBits = {
@@ -221,7 +222,7 @@ function skillToString(skill: number): string {
         }
     }
 
-    return `<UNKNOWN SKILL ${skill}>`;
+    return `${skill}`;
 }
 
 const fieldNames = [

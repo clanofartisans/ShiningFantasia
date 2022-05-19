@@ -40,6 +40,18 @@ export function decodeDmsgEntry(b: Buffer): Entry {
     return elems;
 }
 
+export function encodeDmsgEntry(b: Buffer, elems: Entry) {
+/*
+    b.writeInt32LE(elems.length, 0);
+
+    let offset = 4;
+
+    for (let j = 0; j < elems.length; j++) {
+
+    }
+*/
+}
+
 export class Dmsg extends Resource {
     // header magic is 64 5F 6D 73 67 00 00 00 (d_msg)
     static readonly magic = new Uint8Array([0x64, 0x5f, 0x6d, 0x73, 0x67, 0x00, 0x00, 0x00]);

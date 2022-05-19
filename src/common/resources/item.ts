@@ -1,6 +1,6 @@
 import { lsb16, lsb24, lsb32, lsb8 } from '../bytes';
 import { Bmp2 } from './bmp2';
-import { decodeDmsgEntry, Entry as DmsgEntry } from './dmsg';
+import { decodeDmsgEntry, encodeDmsgEntry, Entry as DmsgEntry } from './dmsg';
 import { Resource } from './resource';
 
 import { dumpBinToStr } from '../util';
@@ -100,6 +100,17 @@ export class Item {
         }
     }
 
+    static encode(b: Buffer, item: Item) {
+        b.writeUInt32LE(item.id, 0);
+
+        if (item.iconTextureBase64) {
+            const iconBuffer = Buffer.from(item.iconTextureBase64, 'base64');
+
+            b.writeUInt32LE(iconBuffer.length, 0x280);
+            b.set(iconBuffer, 0x284);
+        }
+    }
+
     initIcon(b: Buffer, offset: number) {
         const bmp2Length = lsb32(b, 0x280);
         if (bmp2Length > 0) {
@@ -143,6 +154,11 @@ export class ItemType0 extends Item {
 
         this.initIcon(b, 0x280);
     }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
+    }
 }
 
 export class ItemType1 extends Item {
@@ -166,6 +182,11 @@ export class ItemType1 extends Item {
 
         this.initIcon(b, 0x280);
     }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
+    }
 }
 
 export class ItemType2 extends Item {
@@ -185,6 +206,11 @@ export class ItemType2 extends Item {
         this._unk32 = lsb16(b, 0x16);
 
         this.initIcon(b, 0x280);
+    }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
     }
 }
 
@@ -206,6 +232,11 @@ export class ItemType3 extends Item {
         this._unk41 = lsb16(b, 0x16);
 
         this.initIcon(b, 0x280);
+    }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
     }
 }
 
@@ -239,6 +270,11 @@ export class Armor extends Item {
         this._unk60 = lsb8(b, 0x2b);
 
         this.initIcon(b, 0x280);
+    }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
     }
 }
 
@@ -277,6 +313,39 @@ export class Weapon extends Item {
 
         this.initIcon(b, 0x280);
     }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
+        b.writeUInt16LE(item.kind!, 8);
+        b.writeUInt16LE(item.flags!, 4);
+        b.writeUInt16LE(item.stack!, 6);
+        b.writeUInt16LE(item.targets!, 0xc);
+        encodeDmsgEntry(b.slice(0x38), item.text!);
+        b.writeUInt16LE(item.level!, 0xe);
+        b.writeUInt16LE(item.slots!, 0x10);
+        b.writeUInt16LE(item.races!, 0x12);
+        b.writeInt32LE(item.jobs!, 0x14);
+        b.writeUInt16LE(item.slvl!, 0x18);
+        b.writeUInt16LE(item.skill!, 0x22);
+        b.writeUInt8(item._unk15!, 0xbff);
+        b.writeUInt16LE(item._unk16!, 0xa);
+        b.writeUInt16LE(item.dmg!, 0x1c);
+        b.writeUInt16LE(item.delay!, 0x1e);
+        b.writeUInt16LE(item.dps!, 0x20);
+        b.writeUInt16LE(item.emote!, 0x24);
+        b.writeUInt8(item._unk26!, 0x28);
+        b.writeUInt8(item._unk27!, 0x29);
+        b.writeUInt16LE(item._unk28!, 0x2a);
+        b.writeInt32LE(item._unk29!, 0x2c);
+        b.writeUInt16LE(item._unk32!, 0x30);
+        b.writeUInt8(item._unk38!, 0x33);
+        b.writeUInt8(item.ilvl!, 0x32);
+        b.writeUInt8(item._unk52!, 0x34);
+        b.writeUInt8(item._unk58!, 0x35);
+        b.writeUInt8(item._unk59!, 0x36);
+        b.writeUInt8(item._unk60!, 0x37);
+    }
 }
 
 export class ItemType6 extends Item {
@@ -295,6 +364,11 @@ export class ItemType6 extends Item {
         this._unk32 = lsb16(b, 0x10);
 
         this.initIcon(b, 0x280);
+    }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
     }
 }
 
@@ -322,6 +396,11 @@ export class ItemType7 extends Item {
 
         this.initIcon(b, 0x280);
     }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
+    }
 }
 
 export class ItemType8 extends Item {
@@ -338,6 +417,11 @@ export class ItemType8 extends Item {
         this._unk47 = lsb32(b, 0x18);
         this._unk48 = lsb32(b, 0x1c);
     }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
+    }
 }
 
 export class ItemType9 extends Item {
@@ -347,6 +431,11 @@ export class ItemType9 extends Item {
         this._unk15 = lsb8(b, 0xbff);
         this._unk31 = lsb32(b, 8); // ???
         this._unk50 = lsb32(b, 4);
+    }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
     }
 }
 
@@ -367,6 +456,11 @@ export class ItemType10 extends Item {
 
         this.initIcon(b, 0x280);
     }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
+    }
 }
 
 export class ItemType11 extends Item {
@@ -378,6 +472,11 @@ export class ItemType11 extends Item {
         this._unk31 = lsb32(b, 8); // ???
         this._unk49 = lsb32(b, 4);
     }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
+    }
 }
 
 export class ItemType12 extends Item {
@@ -386,6 +485,11 @@ export class ItemType12 extends Item {
 
         this._unk15 = lsb8(b, 0xbff);
         this._unk51 = lsb32(b, 4); // ???
+    }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
     }
 }
 
@@ -399,6 +503,11 @@ export class ItemType13 extends Item {
         this._unk56 = lsb16(b, 6);
         this._unk57 = lsb32(b, 8); // ???
     }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
+    }
 }
 
 export class ItemType14 extends Item {
@@ -409,6 +518,11 @@ export class ItemType14 extends Item {
         this._unk15 = lsb8(b, 0xbff);
         this._unk53 = lsb8(b, 4);
         this._unk54 = lsb24(b, 5); // ???
+    }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
     }
 }
 
@@ -426,6 +540,19 @@ export class Gil extends Item {
         this._unk32 = lsb16(b, 0xe);
 
         this.initIcon(b, 0x280);
+    }
+
+    static encode(b: Buffer, item: Item) {
+        Item.encode(b, item);
+
+        b.writeUInt16LE(item.kind!, 8);
+        b.writeUInt16LE(item.flags!, 4);
+        b.writeUInt16LE(item.stack!, 6);
+        b.writeUInt16LE(item.targets!, 0xc);
+        encodeDmsgEntry(b.slice(0x10), item.text!);
+        b.writeUInt8(item._unk15!, 0xbff);
+        b.writeUInt16LE(item._unk16!, 0xa);
+        b.writeUInt16LE(item._unk32!, 0xe);
     }
 }
 
@@ -516,6 +643,10 @@ function decodeItem(b: Buffer): Item {
     return new itemConstructors[itemType](itemId, itemType, b);
 }
 
+function encodeItem(b: Buffer, item: Item) {
+    return itemConstructors[item.type].encode(b, item);
+}
+
 export class ItemDatabase extends Resource {
 
     entries: Item[];
@@ -540,4 +671,20 @@ export class ItemDatabase extends Resource {
             this.entries.push(item);
         }
     }
+}
+
+export function exportDat(items: Item[]): Buffer {
+    const b = Buffer.alloc(0xc00 * items.length);
+
+    for (let i = 0, j = 0; i < b.length; i += 0xc00, j += 1) {
+        const itemBuf = b.slice(i, i + 0xc00);
+
+        encodeItem(itemBuf, items[j]);
+    }
+
+    for (let i = 0; i < b.length; i++) {
+        b[i] = (b[i] << 5) | (b[i] >> 3);
+    }
+
+    return b;
 }

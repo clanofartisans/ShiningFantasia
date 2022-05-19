@@ -35,6 +35,7 @@
     }
   },
   "devDependencies": {
+    "@babel/types": "^7.17.12",
     "@popperjs/core": "^2.11.0",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
