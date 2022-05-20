@@ -192,3 +192,17 @@ export function decodeEventString(strBuf: Buffer): string {
 
     return decode(ShiftJISEventBytes, ShiftJISEventTable, strBuf);
 }
+
+export function encodeString(str: string): Buffer {
+    // placeholder
+    const tmp = Buffer.alloc(4);
+    tmp.writeInt32LE(0);
+    return tmp;
+}
+
+export function encodeEventString(str: string): Buffer {
+    // placeholder
+    const tmp = Buffer.alloc(4);
+    tmp.writeInt32LE(0);
+    return tmp;
+}

@@ -1,9 +1,18 @@
 import { lsb16, lsb32 } from '../bytes';
-import { decodeString } from '../string';
+import { decodeString, encodeString } from '../string';
 import { Resource } from './resource';
+
+import { dumpBin } from '../util';
 
 export type Elem = number | string;
 export type Entry = Elem[];
+
+const unknownHeader = Buffer.from([
+    0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00
+]);
 
 export function decodeDmsgEntry(b: Buffer): Entry {
 
@@ -12,12 +21,19 @@ export function decodeDmsgEntry(b: Buffer): Entry {
 
     const elems: Entry = [];
 
+    let unusedActive = false;
+
     for (let j = 0; j < numStrings; j++) {
         let stringOffset = lsb32(b, offset);
         const stringType = lsb32(b, offset + 4);
         offset += 8;
 
         if (stringType === 0) {
+            if (b.compare(unknownHeader, 0, unknownHeader.length, stringOffset, stringOffset + 0x1c)) {
+                // todo - look into what these fields actually do
+                unusedActive = true;
+            }
+
             stringOffset += 0x1c;
 
             let stringLength = 0;
@@ -37,19 +53,55 @@ export function decodeDmsgEntry(b: Buffer): Entry {
         }
     }
 
+    if (unusedActive) {
+        console.log(JSON.stringify(elems, null, 4));
+        dumpBin(b);
+    }
+
     return elems;
 }
 
 export function encodeDmsgEntry(b: Buffer, elems: Entry) {
-/*
-    b.writeInt32LE(elems.length, 0);
+
+    const encoded: Buffer[] = [];
+    let encodedSize = 0;
+
+    for (let i = 0; i < elems.length; i++) {
+        if (typeof elems[i] === 'string') {
+            const buf = encodeString(elems[i] as string);
+            encoded.push(buf);
+            encodedSize += unknownHeader.length + buf.length;
+        } else {
+            const buf = Buffer.alloc(4);
+            buf.writeUInt32LE(elems[i] as number);
+            encoded.push(buf);
+            encodedSize += buf.length;
+        }
+    }
 
     let offset = 4;
+    let dataOffset = 4 + elems.length * 8;
 
-    for (let j = 0; j < elems.length; j++) {
+    b.writeInt32LE(elems.length, 0);
 
+    for (let i = 0; i < elems.length; i++) {
+        b.writeInt32LE(dataOffset, offset + 0);
+
+        if (typeof elems[i] === 'string') {
+            b.writeInt32LE(0, offset + 4);
+
+            // todo - look into what these fields actually do
+            b.set(unknownHeader, dataOffset);
+            dataOffset += unknownHeader.length;
+        } else {
+            b.writeInt32LE(1, offset + 4);
+        }
+
+        offset += 8;
+
+        b.set(encoded[i], dataOffset);
+        dataOffset += encoded[i].length;
     }
-*/
 }
 
 export class Dmsg extends Resource {
