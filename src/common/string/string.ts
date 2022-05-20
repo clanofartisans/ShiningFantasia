@@ -172,7 +172,7 @@ function decode(byteTable: number[], table: number[], strBuf: Buffer): string {
         } else if (codePoint > 0) {
             s += String.fromCodePoint(codePoint);
         } else {
-            s += `<${c.toString(16).toUpperCase().padStart(bytes * 2, '0')}>`;
+            s += `\\u${c.toString(16).toUpperCase().padStart(bytes * 2, '0')}`;
         }
     }
 
@@ -194,13 +194,79 @@ export function decodeEventString(strBuf: Buffer): string {
 }
 
 export function encodeString(str: string): Buffer {
-    // placeholder
-    const tmp = Buffer.alloc(4);
-    tmp.writeInt32LE(0);
-    return tmp;
+    // The encoding is kinda Shift_JIS, but has a lot of
+    // non-standard bytes.
+
+    // alloc a large temporary buffer
+    const buf = Buffer.alloc(str.length * 16 + 4);
+    let offset = 0;
+
+    // convert to an array of code points for easier iteration
+    const cp = [];
+
+    for (const cpStr of str) {
+        cp.push(cpStr.codePointAt(0));
+    }
+
+    for (let i = 0; i < cp.length; i++) {
+        const c = cp[i]!;
+
+        const r = cp.length - i - 1;
+
+        if (c < 0x80) {
+            switch (c) {
+                case 92: // '\'
+                    // '\n'
+                    if (r > 0 && cp[i+1] == 110) {
+                        buf[offset] = 0xa;
+                        offset++;
+                        i++;
+                        continue;
+                    }
+                    // '\uxxxx'
+                    if (r > 4 && cp[i+1] == 117) {
+                        const hex = `${String.fromCodePoint(cp[i+2]!)}${String.fromCodePoint(cp[i+3]!)}${String.fromCodePoint(cp[i+4]!)}${String.fromCodePoint(cp[i+5]!)}`;
+                        const code = parseInt(hex, 16);
+                        buf.writeUInt16BE(code, offset);
+                        offset += 2;
+                        i += 5;
+                        continue;
+                    }
+                    break;
+            }
+
+            // any other ascii character
+            buf[offset] = c;
+            offset++;
+        } else {
+            let found = false;
+            for (let j = 0; j < 65536; j++) {
+                if (ShiftJISTable[j] == c) {
+                    buf.writeUInt16BE(j, offset);
+                    offset += 2;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                console.log('brute force lookup failed!');
+            }
+        }
+    }
+
+    // pad up
+    const size = (offset + 4) & ~3;
+
+    // write trailing null bytes (safe because enough space was preallocated!)
+    buf.writeInt32LE(0, offset);
+
+    return buf.slice(0, size);
 }
 
 export function encodeEventString(str: string): Buffer {
+    // The encoding is kinda Shift_JIS, but has a lot of
+    // non-standard bytes.
+
     // placeholder
     const tmp = Buffer.alloc(4);
     tmp.writeInt32LE(0);
