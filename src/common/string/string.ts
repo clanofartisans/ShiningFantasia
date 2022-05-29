@@ -202,11 +202,13 @@ export function encodeString(str: string): Buffer {
     let offset = 0;
 
     // convert to an array of code points for easier iteration
-    const cp = [];
+    const cp: number[] = [];
 
     for (const cpStr of str) {
-        cp.push(cpStr.codePointAt(0));
+        cp.push(cpStr.codePointAt(0)!);
     }
+
+    const isEnglish = cp.length > 0 && cp[0] < 128;
 
     for (let i = 0; i < cp.length; i++) {
         const c = cp[i]!;
@@ -242,6 +244,9 @@ export function encodeString(str: string): Buffer {
             let found = false;
             for (let j = 0; j < 65536; j++) {
                 if (ShiftJISTable[j] == c) {
+                    if (isEnglish) {
+                        if (c == 0x2026) j = 0x8545;
+                    }
                     buf.writeUInt16BE(j, offset);
                     offset += 2;
                     found = true;

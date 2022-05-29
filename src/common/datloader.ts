@@ -10,6 +10,7 @@ import {
 } from './resources';
 
 import { dumpBin } from './util';
+export { dumpBinToStr } from './util';
 
 export async function readFile(fileId: number): Promise<Buffer> {
     return window.ipcApi.readResource(fileId);

@@ -25,6 +25,76 @@ export enum ItemType {
     Unknown,
 }
 
+enum ItemFieldType {
+    U8,
+    U16,
+    U24,
+    U32,
+    Icon,
+    Text,
+}
+
+type ItemFields = Record<string, number>;
+
+const ItemFieldTypes: Record<string, ItemFieldType> = {
+    kind: ItemFieldType.U16,
+    text: ItemFieldType.Text,
+    flags: ItemFieldType.U16,
+    stack: ItemFieldType.U16,
+    targets: ItemFieldType.U16,
+    level: ItemFieldType.U16,
+    slots: ItemFieldType.U16,
+    races: ItemFieldType.U16,
+    jobs: ItemFieldType.U32,
+    slvl: ItemFieldType.U16,
+    skill: ItemFieldType.U16,
+    _unk15: ItemFieldType.U8,
+    _unk16: ItemFieldType.U16,
+    shieldSize: ItemFieldType.U16,
+    dmg: ItemFieldType.U16,
+    delay: ItemFieldType.U16,
+    dps: ItemFieldType.U16,
+    _unk21: ItemFieldType.U16,
+    _unk23: ItemFieldType.U16,
+    _unk24: ItemFieldType.U16,
+    emote: ItemFieldType.U32,
+    _unk26: ItemFieldType.U8,
+    _unk27: ItemFieldType.U8,
+    _unk28: ItemFieldType.U32,
+    _unk29: ItemFieldType.U32,
+    _unk30: ItemFieldType.U16,
+    _unk31: ItemFieldType.U32, // ???
+    _unk32: ItemFieldType.U16,
+    _unk33: ItemFieldType.U32, // ???
+    _unk34: ItemFieldType.U16,
+    _unk35: ItemFieldType.U16,
+    _unk36: ItemFieldType.U16,
+    _unk37: ItemFieldType.U32, // ???
+    _unk38: ItemFieldType.U8,
+    ilvl: ItemFieldType.U8,
+    _unk40: ItemFieldType.U8,
+    _unk41: ItemFieldType.U16,
+    _unk42: ItemFieldType.U32,
+    _unk43: ItemFieldType.U32,
+    _unk44: ItemFieldType.U32,
+    _unk45: ItemFieldType.U32,
+    _unk46: ItemFieldType.U32,
+    _unk47: ItemFieldType.U32,
+    _unk48: ItemFieldType.U32,
+    _unk49: ItemFieldType.U32,
+    _unk50: ItemFieldType.U32,
+    _unk51: ItemFieldType.U32, // ???
+    _unk52: ItemFieldType.U8,
+    _unk53: ItemFieldType.U8,
+    _unk54: ItemFieldType.U24, // ???
+    _unk55: ItemFieldType.U16,
+    _unk56: ItemFieldType.U16,
+    _unk57: ItemFieldType.U32,
+    _unk58: ItemFieldType.U8,
+    _unk59: ItemFieldType.U8,
+    _unk60: ItemFieldType.U8,
+};
+
 export class Item {
     id: number;
     type: ItemType;
@@ -100,7 +170,7 @@ export class Item {
         }
     }
 
-    static encode(b: Buffer, item: Item) {
+    static encode(b: Buffer, item: Item, fields?: ItemFields) {
         b.writeUInt32LE(item.id, 0);
 
         if (item.iconTextureBase64) {
@@ -108,6 +178,38 @@ export class Item {
 
             b.writeUInt32LE(iconBuffer.length, 0x280);
             b.set(iconBuffer, 0x284);
+        }
+
+        if (fields) {
+            // todo - convert decode to table method
+            const _item = item as any;
+
+            for (const [field, offset] of Object.entries(fields)) {
+                const type = ItemFieldTypes[field];
+                const value =  _item[field];
+
+                switch (type) {
+                    case ItemFieldType.U8:
+                        b.writeUInt8(value, offset);
+                        break;
+                    case ItemFieldType.U16:
+                        b.writeUInt16LE(value, offset);
+                        break;
+                    case ItemFieldType.U24:
+                        // todo - ???
+                        b.writeUInt16LE(value, offset);
+                        break;
+                    case ItemFieldType.U32:
+                        b.writeUInt32LE(value, offset);
+                        break;
+                    case ItemFieldType.Icon:
+                        // already handled above
+                        break;
+                    case ItemFieldType.Text:
+                        encodeDmsgEntry(b.slice(offset), value);
+                        break;
+                }
+            }
         }
     }
 
@@ -148,6 +250,7 @@ export class ItemType0 extends Item {
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk23 = lsb16(b, 0xe);
+        this._unk24 = lsb16(b, 0x10);
         this._unk32 = lsb16(b, 0x12);
         this._unk40 = lsb8(b, 0x15);
         this._unk41 = lsb16(b, 0x16);
@@ -156,8 +259,33 @@ export class ItemType0 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            kind: 8,
+            flags: 4,
+            stack: 6,
+            targets: 0xc,
+            text: 0x18,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            _unk23: 0xe,
+            _unk24: 0x10,
+            _unk32: 0x12,
+            _unk40: 0x15,
+            _unk41: 0x16,
+        });
+/*
+        b.writeUInt16LE(item.kind!, 8);
+        b.writeUInt16LE(item.flags!, 4);
+        b.writeUInt16LE(item.stack!, 6);
+        b.writeUInt16LE(item.targets!, 0xc);
+        encodeDmsgEntry(b.slice(0x18), item.text!);
+        b.writeUInt8(item._unk15!, 0xbff);
+        b.writeUInt16LE(item._unk16!, 0xa);
+        b.writeUInt16LE(item._unk23!, 0xe);
+        b.writeUInt16LE(item._unk32!, 0x12);
+        b.writeUInt8(item._unk40!, 0x15);
+        b.writeUInt16LE(item._unk41!, 0x16);
+*/
     }
 }
 
@@ -184,7 +312,22 @@ export class ItemType1 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
+        Item.encode(b, item, {
+            kind: 8,
+            flags: 4,
+            stack: 6,
+            targets: 0xc,
+            text: 0x1c,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            _unk21: 0xe,
+            _unk32: 0x10,
+            _unk40: 0x13,
+            _unk41: 0x14,
+            _unk58: 0x16,
+            _unk59: 0x17,
+            _unk60: 0x18,
+        });
 
     }
 }
@@ -200,7 +343,7 @@ export class ItemType2 extends Item {
         this.text = decodeDmsgEntry(b.slice(0x18));
         this.level = lsb16(b, 0x14);
         this.slots = lsb16(b, 0xe);
-        this.jobs = lsb32(b, 0x10);
+        this.jobs = lsb32(b, 0x10); // todo - pup-specific
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk32 = lsb16(b, 0x16);
@@ -209,8 +352,19 @@ export class ItemType2 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            kind: 8,
+            flags: 4,
+            stack: 6,
+            targets: 0xc,
+            text: 0x18,
+            level: 0x14,
+            slots: 0xe,
+            jobs: 0x10,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            _unk32: 0x16,
+        });
     }
 }
 
@@ -235,8 +389,20 @@ export class ItemType3 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            kind: 8,
+            flags: 4,
+            stack: 6,
+            targets: 0xc,
+            text: 0x18,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            _unk23: 0xe,
+            _unk24: 0x10,
+            _unk32: 0x12,
+            _unk40: 0x15,
+            _unk41: 0x16,
+        });
     }
 }
 
@@ -273,8 +439,32 @@ export class Armor extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            kind: 8,
+            flags: 4,
+            stack: 6,
+            targets: 0xc,
+            text: 0x2c,
+            level: 0xe,
+            slots: 0x10,
+            races: 0x12,
+            jobs: 0x14,
+            slvl: 0x18,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            shieldSize: 0x1a,
+            _unk26: 0x1c,
+            _unk27: 0x1d,
+            _unk28: 0x1e,
+            _unk29: 0x20,
+            _unk32: 0x24,
+            _unk38: 0x27,
+            ilvl: 0x26,
+            _unk52: 0x28,
+            _unk58: 0x29,
+            _unk59: 0x2a,
+            _unk60: 0x2b,
+        });
     }
 }
 
@@ -315,8 +505,37 @@ export class Weapon extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            kind: 8,
+            flags: 4,
+            stack: 6,
+            targets: 0xc,
+            text: 0x38,
+            level: 0xe,
+            slots: 0x10,
+            races: 0x12,
+            jobs: 0x14,
+            slvl: 0x18,
+            skill: 0x22,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            dmg: 0x1c,
+            delay: 0x1e,
+            dps: 0x20,
+            emote: 0x24,
+            _unk26: 0x28,
+            _unk27: 0x29,
+            _unk28: 0x2a,
+            _unk29: 0x2c,
+            _unk32: 0x30,
+            _unk38: 0x33,
+            ilvl: 0x32,
+            _unk52: 0x34,
+            _unk58: 0x35,
+            _unk59: 0x36,
+            _unk60: 0x37,
+    });
+/*
         b.writeUInt16LE(item.kind!, 8);
         b.writeUInt16LE(item.flags!, 4);
         b.writeUInt16LE(item.stack!, 6);
@@ -345,6 +564,7 @@ export class Weapon extends Item {
         b.writeUInt8(item._unk58!, 0x35);
         b.writeUInt8(item._unk59!, 0x36);
         b.writeUInt8(item._unk60!, 0x37);
+*/
     }
 }
 
@@ -367,8 +587,18 @@ export class ItemType6 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            kind: 8,
+            flags: 4,
+            stack: 6,
+            targets: 0xc,
+            text: 0x54,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            _unk21: 0xe,
+            _unk31: 0x14, // ???
+            _unk32: 0x10,
+        });
     }
 }
 
@@ -398,8 +628,25 @@ export class ItemType7 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            kind: 8,
+            flags: 4,
+            stack: 6,
+            targets: 0xc,
+            text: 0x28,
+            level: 0xe,
+            slots: 0x10,
+            races: 0x12,
+            jobs: 0x14,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            _unk26: 0x1a,
+            _unk27: 0x1b,
+            _unk28: 0x1c,
+            _unk29: 0x20,
+            _unk30: 0x18,
+            _unk32: 0x24,
+        });
     }
 }
 
@@ -419,8 +666,17 @@ export class ItemType8 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            text: 0x20,
+            _unk15: 0xbff,
+            _unk42: 4,
+            _unk43: 8,
+            _unk44: 0xc,
+            _unk45: 0x10,
+            _unk46: 0x14,
+            _unk47: 0x18,
+            _unk48: 0x1c,
+        });
     }
 }
 
@@ -434,8 +690,11 @@ export class ItemType9 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            _unk15: 0xbff,
+            _unk31: 8, // ???
+            _unk50: 4,
+        });
     }
 }
 
@@ -458,8 +717,18 @@ export class ItemType10 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            kind: 0x26,
+            flags: 4,
+            text: 0x70,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            _unk33: 6, // ???
+            _unk34: 0x28,
+            _unk35: 0x2c,
+            _unk36: 0x2e,
+            _unk37: 0x30, // ???
+        });
     }
 }
 
@@ -474,8 +743,12 @@ export class ItemType11 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            text: 0x238,
+            _unk15: 0xbff,
+            _unk31: 8, // ???
+            _unk49: 4,
+        });
     }
 }
 
@@ -488,8 +761,10 @@ export class ItemType12 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            _unk15: 0xbff,
+            _unk51: 4, // ???
+        });
     }
 }
 
@@ -505,8 +780,13 @@ export class ItemType13 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            text: 0x108,
+            _unk15: 0xbff,
+            _unk55: 4,
+            _unk56: 6,
+            _unk57: 8, // ???
+        });
     }
 }
 
@@ -521,8 +801,12 @@ export class ItemType14 extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
-
+        Item.encode(b, item, {
+            text: 8,
+            _unk15: 0xbff,
+            _unk53: 4,
+            _unk54: 5, // ???
+        });
     }
 }
 
@@ -543,8 +827,18 @@ export class Gil extends Item {
     }
 
     static encode(b: Buffer, item: Item) {
-        Item.encode(b, item);
+        Item.encode(b, item, {
+            kind: 8,
+            flags: 4,
+            stack: 6,
+            targets: 0xc,
+            text: 0x10,
+            _unk15: 0xbff,
+            _unk16: 0xa,
+            _unk32: 0xe,
+        });
 
+/*
         b.writeUInt16LE(item.kind!, 8);
         b.writeUInt16LE(item.flags!, 4);
         b.writeUInt16LE(item.stack!, 6);
@@ -553,6 +847,7 @@ export class Gil extends Item {
         b.writeUInt8(item._unk15!, 0xbff);
         b.writeUInt16LE(item._unk16!, 0xa);
         b.writeUInt16LE(item._unk32!, 0xe);
+*/
     }
 }
 
