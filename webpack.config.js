@@ -210,5 +210,19 @@ module.exports = function (env, argv) {
             ],
             tsconfig: path.resolve(__dirname, 'src/renderer/tsconfig.json')
         }),
+        getTarget({
+            production,
+            target: 'node',
+            entry: {index: './src/commands/item2json.ts'},
+            output: {path: path.resolve(__dirname, './build/commands/item2json')},
+            tsconfig: path.resolve(__dirname, 'src/commands/tsconfig.json')
+        }),
+        getTarget({
+            production,
+            target: 'node',
+            entry: {index: './src/commands/json2item.ts'},
+            output: {path: path.resolve(__dirname, './build/commands/json2item')},
+            tsconfig: path.resolve(__dirname, 'src/commands/tsconfig.json')
+        }),
     ]);
 }
