@@ -9,7 +9,6 @@ export enum ItemType {
     ItemType0,
     ItemType1,
     ItemType2,
-    ItemType3,
     Armor,
     Weapon,
     ItemType6,
@@ -364,44 +363,6 @@ export class ItemType2 extends Item {
             _unk15: 0xbff,
             _unk16: 0xa,
             _unk32: 0x16,
-        });
-    }
-}
-
-export class ItemType3 extends Item {
-    constructor(id: number, type: ItemType, b: Buffer) {
-        super(id, type);
-
-        this.kind = lsb16(b, 8);
-        this.flags = lsb16(b, 4);
-        this.stack = lsb16(b, 6);
-        this.targets = lsb16(b, 0xc);
-        this.text = decodeDmsgEntry(b.slice(0x18));
-        this._unk15 = lsb8(b, 0xbff);
-        this._unk16 = lsb16(b, 0xa);
-        this._unk23 = lsb16(b, 0xe);
-        this._unk24 = lsb16(b, 0x10);
-        this._unk32 = lsb16(b, 0x12);
-        this._unk40 = lsb8(b, 0x15);
-        this._unk41 = lsb16(b, 0x16);
-
-        this.initIcon(b, 0x280);
-    }
-
-    static encode(b: Buffer, item: Item) {
-        Item.encode(b, item, {
-            kind: 8,
-            flags: 4,
-            stack: 6,
-            targets: 0xc,
-            text: 0x18,
-            _unk15: 0xbff,
-            _unk16: 0xa,
-            _unk23: 0xe,
-            _unk24: 0x10,
-            _unk32: 0x12,
-            _unk40: 0x15,
-            _unk41: 0x16,
         });
     }
 }
@@ -866,7 +827,7 @@ function getItemType(itemId: number): ItemType {
         return ItemType.ItemType2;
     }
     if (itemId >= 8704 && itemId < 10240) {
-        return ItemType.ItemType3;
+        return ItemType.ItemType0;
     }
     if (itemId >= 10240 && itemId < 16384) {
         return ItemType.Armor;
@@ -915,7 +876,6 @@ const itemConstructors = {
     [ItemType.ItemType0]: ItemType0,
     [ItemType.ItemType1]: ItemType1,
     [ItemType.ItemType2]: ItemType2,
-    [ItemType.ItemType3]: ItemType3,
     [ItemType.Armor]: Armor,
     [ItemType.Weapon]: Weapon,
     [ItemType.ItemType6]: ItemType6,
