@@ -177,6 +177,20 @@ module.exports = function (env, argv) {
         });
     }
 
+    const commands = [
+        'item2json',
+        'json2item',
+        'dmsg2json',
+        'xistring2json',
+        'mgc2json',
+        'comm2json'].map(c => getTarget({
+            production,
+            target: 'node',
+            entry: {index: `./src/commands/${c}.ts`},
+            output: {path: path.resolve(__dirname, `/build/commands/${c}`)},
+            tsconfig: path.resolve(__dirname, 'src/commands/tsconfig.json')
+        }));
+
     return targets.concat([
         getTarget({
             production,
@@ -210,19 +224,7 @@ module.exports = function (env, argv) {
             ],
             tsconfig: path.resolve(__dirname, 'src/renderer/tsconfig.json')
         }),
-        getTarget({
-            production,
-            target: 'node',
-            entry: {index: './src/commands/item2json.ts'},
-            output: {path: path.resolve(__dirname, './build/commands/item2json')},
-            tsconfig: path.resolve(__dirname, 'src/commands/tsconfig.json')
-        }),
-        getTarget({
-            production,
-            target: 'node',
-            entry: {index: './src/commands/json2item.ts'},
-            output: {path: path.resolve(__dirname, './build/commands/json2item')},
-            tsconfig: path.resolve(__dirname, 'src/commands/tsconfig.json')
-        }),
+
+        ...commands,
     ]);
 }

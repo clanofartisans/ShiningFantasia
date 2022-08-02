@@ -1,7 +1,7 @@
 {
   "name": "shining-fantasia",
-  "version": "0.0.0",
-  "description": "Xi DAT Editor",
+  "version": "0.0.1",
+  "description": "Xi DAT Editing Tools",
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
@@ -36,7 +36,11 @@
   },
   "bin": {
     "item2json": "./build/commands/item2json/index.js",
-    "json2item": "./build/commands/json2item/index.js"
+    "json2item": "./build/commands/json2item/index.js",
+    "dmsg2json": "./build/commands/dmsg2json/index.js",
+    "xistring2json": "./build/commands/xistring2json/index.js",
+    "mgc2json": "./build/commands/mgc2json/index.js",
+    "comm2json": "./build/commands/comm2json/index.js"
   },
   "devDependencies": {
     "@babel/types": "^7.18.2",
