@@ -313,8 +313,8 @@ export interface Entry {
     temp: Buffer;
 }
 
-function decodeMgc_(b: Buffer) {
-    if ((b.length % 100) !== 0) {
+function decodeMgc_(b: Buffer, blockLength: number) {
+    if ((b.length % blockLength) !== 0) {
         return b;
     }
 
@@ -337,7 +337,7 @@ function decodeMgc_(b: Buffer) {
         4, // 15
     ];
 
-    for (let i = 0; i < b.length; i += 100) {
+    for (let i = 0; i < b.length; i += blockLength) {
         const x = lsb8(b, i + 2);
         const y = lsb8(b, i + 11);
         const z = lsb8(b, i + 12);
@@ -349,7 +349,7 @@ function decodeMgc_(b: Buffer) {
         const pop = Math.abs(xBits + zBits - yBits);
         const rot = pop % 5;
 
-        for (let j = 0; j < 100; j++) {
+        for (let j = 0; j < blockLength; j++) {
             if (((j != 2) && (j != 0xb)) && (j != 0xc)) {
                 const v = b[i + j];
                 let l = 0;
@@ -418,7 +418,11 @@ export class ChunkedResource {
 
             // Hack in some automatic decoding of the spell info resource
             if (type === ChunkedResourceType.Mgb && name === 'mgc_') {
-                resBuf = decodeMgc_(resBuf);
+                resBuf = decodeMgc_(resBuf, 100);
+            }
+
+            if (type === ChunkedResourceType.Acb && name === 'comm') {
+                resBuf = decodeMgc_(resBuf, 48);
             }
 
             const constructor = resourceConstructors[type];
