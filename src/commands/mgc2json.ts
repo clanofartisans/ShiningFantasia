@@ -90,6 +90,71 @@ function getTargets(bits: number): string[] {
     return flags;
 }
 
+const skillNames: Record<string, number> = {
+    NONE: 0,
+    HAND_TO_HAND: 1,
+    DAGGER: 2,
+    SWORD: 3,
+    GREAT_SWORD: 4,
+    AXE: 5,
+    GREAT_AXE: 6,
+    SCYTHE: 7,
+    POLEARM: 8,
+    KATANA: 9,
+    GREAT_KATANA: 10,
+    CLUB: 11,
+    STAFF: 12,
+    AUTOMATON_MELEE: 22,
+    AUTOMATON_RANGED: 23,
+    AUTOMATON_MAGIC: 24,
+    ARCHERY: 25,
+    MARKSMANSHIP: 26,
+    THROWING: 27,
+    GUARD: 28,
+    EVASION: 29,
+    SHIELD: 30,
+    PARRY: 31,
+    DIVINE_MAGIC: 32,
+    HEALING_MAGIC: 33,
+    ENHANCING_MAGIC: 34,
+    ENFEEBLING_MAGIC: 35,
+    ELEMENTAL_MAGIC: 36,
+    DARK_MAGIC: 37,
+    SUMMONING_MAGIC: 38,
+    NINJUTSU: 39,
+    SINGING: 40,
+    STRING_INSTRUMENT: 41,
+    WIND_INSTRUMENT: 42,
+    BLUE_MAGIC: 43,
+    GEOMANCY: 44,
+    HANDBELL: 45,
+    FISHING: 48,
+    WOODWORKING: 49,
+    SMITHING: 50,
+    GOLDSMITHING: 51,
+    CLOTHCRAFT: 52,
+    LEATHERCRAFT: 53,
+    BONECRAFT: 54,
+    ALCHEMY: 55,
+    COOKING: 56,
+    SYNERGY: 57,
+    RID: 58,
+    DIG: 59,
+
+    // Two items are set to 255
+    UNKNOWN_255: 255,
+}
+
+function skillToString(skill: number): string {
+    for (const [skillName, id] of Object.entries(skillNames)) {
+        if (skill === id) {
+            return skillName;
+        }
+    }
+
+    return `${skill}`;
+}
+
 const jobNames = [
     'NONE',
     'WAR',
@@ -116,6 +181,163 @@ const jobNames = [
     'RUN',
     'MON',
 ];
+
+const modifierNames: Record<number, string> = {
+    0: 'ACCESSION',
+    1: 'MANIFESTATION',
+    2: 'ADDENDUM',
+    3: 'TABULA_RASA',
+    4: 'ELEMENTAL_SEAL',
+    5: 'GEOCOLURE',
+    6: 'THEURGIC_FOCUS',
+    7: 'CONSUME_ALL_MP',
+};
+
+function getModifiers(bits: number): string[] {
+    const flags = [];
+
+    for (let i = 0; i < 8; i++) {
+        if (((1 << i) & bits) !== 0) {
+            const modifierName = modifierNames[i] ?? `${i}`;
+            flags.push(modifierName);
+        }
+    }
+
+    return flags;
+}
+
+const aoeTypeNames: Record<number, string> = {
+    0: 'NONE',
+    1: 'TARGET_AOE',
+    2: 'SELF_CONAL',
+    3: 'SELF_AOE',
+};
+
+function getAoeType(type: number): string {
+    return aoeTypeNames[type] ?? `${type}`;
+}
+
+const validTargetsNames: Record<number, string> = {
+    0: 'ALL',
+    1: 'SELF',
+    2: 'SELF_AOE',
+    3: 'SELF_AOE2', // teleports, escape
+    // 4 - unused
+    5: 'MOB_SELFAOE',
+    6: 'PARTY',
+    7: 'PARTY_AOE',
+    // 8 - unused
+    // 9 - unused
+    10: 'PC',
+    // 11 - unused
+    // 12 - unused
+    13: 'MOB',
+    14: 'MOB_AOE',
+    15: 'DEAD',
+}
+
+function getValidTargets(kind: number): string {
+    return validTargetsNames[kind] ?? `${kind}`;
+}
+
+function getModifiersEx(bits: number): Record<string, string|boolean> {
+    const a =               (bits &          3);
+    const b =               (bits &       0x78) >> 3;
+    const kind =            (bits &   0x7fff80) >> 7;
+
+    // same as the other modifier bits
+    const isAccession =     (bits &   0x800000) !== 0;
+    const isManifestation = (bits &  0x1000000) !== 0;
+    const isAddendum =      (bits & 0x02000000) !== 0;
+    const isTabulaRasa =    (bits & 0x04000000) !== 0;
+    const isElementalSeal = (bits & 0x08000000) !== 0;
+    const isGeocolure =     (bits & 0x10000000) !== 0;
+    const isTheurgicFocus = (bits & 0x20000000) !== 0;
+    const isConsumeAllMP =  (bits & 0x40000000) !== 0;
+
+    // unknown / unused
+    const h =               (bits & 0x80000000) !== 0;
+
+    const ret: any = {};
+
+    if (true) {
+        // an enum of some sort: 0 (tends to be offensive spells), 1 (tends to be defensive spells), 2 (tends to be defensive blue mage spells, Odin, Atomos)
+        // Used by Convergence
+        ret['A'] = `${a}`;
+    }
+    if (b) {
+        // Unknown?
+        // Used by Convergence
+        ret['B'] = `${b}`;
+    }
+    if (kind||true) {
+        const magicKinds: Record<number, string> = {
+            0: 'BLUE_MAGIC',
+            1: 'OFFENSIVE',
+            2: 'CURE',
+            3: 'STATUS_EFFECT',
+            4: 'STATUS_REMOVAL',
+            // 5 - unused
+            6: 'DEFENSIVE_SONG',
+            7: 'OFFENSIVE_SONG',
+            8: 'DRAIN',
+            9: 'ASPIR',
+            // 10 - unused
+            11: 'ELEMENTAL_DEBUFF',
+            12: 'TELEPORT', // including recall, warp, escape
+            13: 'RAISE',
+            14: 'FINALE',
+            15: 'TRACTOR',
+            16: 'SUMMON', // including trusts
+            17: 'ABSORB_STAT',
+            18: 'DISPEL', // including erase
+            19: 'VIRELEI',
+            20: 'DEATH',
+            // 21 - unused
+            // 22 - unused
+            // 23 - unused
+            // 24 - unused
+            // 25 - unused
+            // 26 - unused
+            // 27 - unused
+            28: 'HELIX',
+            29: 'COLURE',
+            // 30 - unused
+            31: 'OTHER', // meteor, aquaveil, sacrifice, esuna, absorb-tp, boost, gain
+        };
+        ret['KIND'] = magicKinds[kind] ?? `${kind}`;
+    }
+    if (isAccession) {
+        ret['ACCESSION'] = isAccession;
+    }
+    if (isManifestation) {
+        ret['MANIFESTATION'] = isManifestation;
+    }
+    if (isAddendum) {
+        ret['ADDENDUM'] = isAddendum;
+    }
+    if (isTabulaRasa) {
+        ret['TABULA_RASA'] = isTabulaRasa;
+    }
+    if (isElementalSeal) {
+        ret['ELEMENTAL_SEAL'] = isElementalSeal;
+    }
+    if (isGeocolure) {
+        ret['GEOCOLURE'] = isGeocolure;
+    }
+    if (isTheurgicFocus) {
+        ret['THEURGIC_FOCUS'] = isTheurgicFocus;
+    }
+    if (isConsumeAllMP) {
+        ret['CONSUME_ALL_MP'] = isConsumeAllMP;
+    }
+    if (h) {
+        // unused
+        ret['H'] = h;
+    }
+
+    return ret;
+}
 
 const jobBits = {
     NONE: 0x00000001,
@@ -156,36 +378,6 @@ function jobBitsToArray(bits: number): string[] {
     return jobs;
 }
 
-// TODO - RENAME TO casting restrictions
-function getTargetFlags(bits: number): string[] {
-    const flags = [];
-
-    for (let i = 0; i < 8; i++) {
-        if (((1 << i) & bits) !== 0) {
-            switch (i) {
-                case 2:
-                    flags.push('ADDENDUM');
-                    break;
-                case 3:
-                    // Kaustra / Embrava
-                    flags.push('SCHOLAR');
-                    break;
-                case 4:
-                    flags.push('ELEMENTAL_SEAL');
-                    break;
-                case 5:
-                    flags.push('GEOCOLURE');
-                    break;
-                default:
-                    flags.push(`${i}`);
-                    break;
-            }
-        }
-    }
-
-    return flags;
-}
-
 if (process.argv.length !== 4) {
     console.error('Incorrect command line arguments!');
     process.exit(1);
@@ -209,25 +401,14 @@ for (let i = 0; i < menuRes.resources.length; i++) {
 
             const obj: any = {};
 
-            // word id;
-            obj.id = b.readInt16LE(0x00);
-            // word magicType;
-            obj.magicType = magicTypes[b.readInt16LE(0x02)];
-            // word field2_0x4;
-            obj.element = getElementName(b.readInt16LE(0x04));
-            // word field4_0x6;
-            obj.targets = getTargets(b.readInt16LE(0x06));
-            // undefined field5_0x8;
-            obj._08 = b.readInt8(0x08);
-            // undefined field6_0x9;
-            obj._09 = b.readInt8(0x09);
-            // word mpCost;
-            obj.mpCost = b.readInt16LE(0x0A);
-            // byte field8_0xc;
+            obj.id = b.readUInt16LE(0x00);
+            obj.magicType = magicTypes[b.readUInt16LE(0x02)];
+            obj.element = getElementName(b.readUInt16LE(0x04));
+            obj.targets = getTargets(b.readUInt16LE(0x06));
+            obj.skill = skillToString(b.readUInt16LE(0x08));
+            obj.mpCost = b.readUInt16LE(0x0A);
             obj.castTime = b.readUInt8(0x0C);
-            // byte field9_0xd;
             obj.recastTime = b.readUInt8(0x0D);
-            // word levels[24];
             obj.levels = {};
             for (let l = 0; l < 24; l++) {
                 const level = b.readInt16LE(0x0E + l * 2);
@@ -235,92 +416,30 @@ for (let i = 0; i < menuRes.resources.length; i++) {
                     obj.levels[jobNames[l]] = level;
                 }
             }
-            // undefined field11_0x3a;
-            obj._3A = b.readInt8(0x3A);
-            // undefined field12_0x3b;
-            obj._3B = b.readInt8(0x3B);
-            // undefined field13_0x3c;
-            obj._3C = b.readInt8(0x3C);
-            // undefined field14_0x3d;
-            obj._3D = b.readInt8(0x3D);
-            // word field15_0x3e;
-            obj._3E = b.readInt16LE(0x3E);
-            // word field16_0x40;
             obj.iconId = b.readInt16LE(0x40);
-            // word field17_0x42;
             obj.icon2Id = b.readInt16LE(0x42);
-            // byte field18_0x44;
-            obj.targetFlags = getTargetFlags(b.readUInt8(0x44));
-            // byte field19_0x45;
+            obj.modifiers = getModifiers(b.readUInt8(0x44));
             // 0h,     1h,     3h,     4h
             // 5h,     6h,     7h,     8h
             // Ah,     Ch,     Eh,    10h
             // 14h,    19h,    1Eh,    FFh
             obj.range = b.readInt8(0x45);
-            // byte field20_0x46;
             obj.radius = b.readInt8(0x46);
-            // byte field21_0x47;
-            obj.aoeType = b.readInt8(0x47);
-            // byte field22_0x48;
-            obj._48 = b.readInt8(0x48);
-            // undefined field23_0x49;
-            obj._49 = b.readInt8(0x49);
-            // undefined field24_0x4a;
-            obj._4A = b.readInt8(0x4A);
-            // undefined field25_0x4b;
-            obj._4B = b.readInt8(0x4B);
+            obj.aoeType = getAoeType(b.readUInt8(0x47));
+            obj.validTargets = getValidTargets(b.readUInt32LE(0x48));
+            obj.modifiersEx = getModifiersEx(b.readUInt32LE(0x4C));
+            obj.giftsRequired = jobBitsToArray(b.readUInt32LE(0x5C));
 
-            // dword field26_0x4c;
-            const targets = b.readInt32LE(0x4C);
-            obj._0x4c = [];
-            for (let j = 0; j < 32; j++) {
-                const flag = (1 << j);
-                if ((targets & flag) !== 0) {
-                    const targetTypes: Record<number, string> = {
-                    }
-                    let name: string|undefined = targetTypes[j];
-                    if (!name) {
-                        name = `${j}`;
-                    }
+            // some other unique identifier
+            obj._3E = b.readUInt16LE(0x3E);
 
-                    obj._0x4c.push(name)
-                }
-            }
+            // magic type / kind-specific data
+            obj._50 = b.readUInt32LE(0x50).toString(16).toUpperCase().padStart(8, '0');
+            obj._54 = b.readUInt32LE(0x54).toString(16).toUpperCase().padStart(8, '0');
+            obj._58 = b.readUInt32LE(0x58).toString(16).toUpperCase().padStart(8, '0');
 
-            // undefined field27_0x50;
-            obj._50 = b.readInt8(0x50);
-            // undefined field28_0x51;
-            obj._51 = b.readInt8(0x51);
-            // undefined field29_0x52;
-            obj._52 = b.readInt8(0x52);
-            // undefined field30_0x53;
-            obj._53 = b.readInt8(0x53);
-            // undefined field31_0x54;
-            obj._54 = b.readInt8(0x54);
-            // undefined field32_0x55;
-            obj._55 = b.readInt8(0x55);
-            // undefined field33_0x56;
-            obj._56 = b.readInt8(0x56);
-            // undefined field34_0x57;
-            obj._57 = b.readInt8(0x57);
-            // undefined field35_0x58;
-            obj._58 = b.readInt8(0x58);
-            // undefined field36_0x59;
-            obj._59 = b.readInt8(0x59);
-            // undefined field37_0x5a;
-            obj._5A = b.readInt8(0x5A);
-            // undefined field38_0x5b;
-            obj._5B = b.readInt8(0x5B);
-            // dword field39_0x5c;
-            obj.giftsRequired = jobBitsToArray(b.readInt32LE(0x5C));
-            // undefined field40_0x60;
-            obj._60 = b.readInt8(0x60);
-            // undefined field41_0x61;
-            obj._61 = b.readInt8(0x61);
-            // undefined field42_0x62;
-            obj._62 = b.readInt8(0x62);
-            // undefined field43_0x63;
-            obj._63 = b.readInt8(0x63);
+            // trailer byte ff
+            obj._60 = b.readUInt32LE(0x50).toString(16).toUpperCase().padStart(8, '0');
 
             mgc.push(obj);
         }
