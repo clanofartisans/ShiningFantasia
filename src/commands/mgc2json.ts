@@ -226,11 +226,11 @@ const validTargetsNames: Record<number, string> = {
     5: 'MOB_SELFAOE',
     6: 'PARTY',
     7: 'PARTY_AOE',
-    // 8 - unused
-    // 9 - unused
+    8: 'LUOPAN',
+    9: 'PET',
     10: 'PC',
     // 11 - unused
-    // 12 - unused
+    12: 'SELF_PET',
     13: 'MOB',
     14: 'MOB_AOE',
     15: 'DEAD',
@@ -439,7 +439,7 @@ for (let i = 0; i < menuRes.resources.length; i++) {
             obj._58 = b.readUInt32LE(0x58).toString(16).toUpperCase().padStart(8, '0');
 
             // trailer byte ff
-            obj._60 = b.readUInt32LE(0x50).toString(16).toUpperCase().padStart(8, '0');
+            obj._60 = b.readUInt32LE(0x60).toString(16).toUpperCase().padStart(8, '0');
 
             mgc.push(obj);
         }
