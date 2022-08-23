@@ -129,6 +129,9 @@ function convertSpecial(orig: number, code: SpecialCode, param: Buffer | never[]
         case SpecialCode.TWO_DIGIT_VALUE:
             return `{${param[0]}:02d}`;
 
+        case SpecialCode.FOUR_DIGIT_VALUE:
+            return `{${param[0]}:04d}`;
+
         case SpecialCode.HEX_VALUE:
             // $ left out to avoid confusion
             return `{${param[0]}:x}`;

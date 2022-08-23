@@ -36,6 +36,7 @@ export enum SpecialCode {
 	HEX_VALUE,
 	BINARY_VALUE,
 	ACTION_HEX_VALUE,
+	FOUR_DIGIT_VALUE,
 
 	NEWLINE,
 };
@@ -84,6 +85,7 @@ const TwoDigitValue = MakeSpecial(SpecialCode.TWO_DIGIT_VALUE, 1);
 const HexValue = MakeSpecial(SpecialCode.HEX_VALUE, 1);
 const BinaryValue = MakeSpecial(SpecialCode.BINARY_VALUE, 1);
 const ActionHexValue = MakeSpecial(SpecialCode.ACTION_HEX_VALUE, 1);
+const FourDigitValue = MakeSpecial(SpecialCode.FOUR_DIGIT_VALUE, 1);
 
 const Newline = MakeSpecial(SpecialCode.NEWLINE, 0);
 
@@ -32753,7 +32755,7 @@ export const ShiftJISEventTable = [
 	BinaryValue, // 0x7F96
 	ActionHexValue, // 0x7F97
 	Unknown, // 0x7F98
-	Unknown1, // 0x7F99
+	FourDigitValue, // 0x7F99
 	Unknown, // 0x7F9A
 	Unknown, // 0x7F9B
 	Unknown, // 0x7F9C
