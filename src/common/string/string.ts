@@ -168,7 +168,7 @@ function decode(byteTable: number[], table: number[], strBuf: Buffer): string {
             const special = (code & 0xffff) as SpecialCode;
             const extra = (code >> 16);
 
-            const param = (extra > 0) ? ((i+extra) < strBuf.length ? strBuf.slice(i, i + extra) : []) : [];
+            const param = (extra > 0) ? ((i+extra) < strBuf.length ? strBuf.subarray(i, i + extra) : []) : [];
             i += extra;
 
             s += convertSpecial(c, special, param);
@@ -268,7 +268,7 @@ export function encodeString(str: string): Buffer {
     // write trailing null bytes (safe because enough space was preallocated!)
     buf.writeInt32LE(0, offset);
 
-    return buf.slice(0, size);
+    return buf.subarray(0, size);
 }
 
 export function encodeEventString(str: string): Buffer {

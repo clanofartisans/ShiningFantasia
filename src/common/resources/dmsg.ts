@@ -43,7 +43,7 @@ export function decodeDmsgEntry(b: Buffer): Entry {
                 stringLength++;
             }
 
-            const strBuf = b.slice(stringOffset, stringOffset + stringLength);
+            const strBuf = b.subarray(stringOffset, stringOffset + stringLength);
             const s = decodeString(strBuf);
             elems.push(s);
         } else {
@@ -170,7 +170,7 @@ export class Dmsg extends Resource {
                 addrOffset += 8;
             }
 
-            const elems = decodeDmsgEntry(b.slice(offset, offset + length));
+            const elems = decodeDmsgEntry(b.subarray(offset, offset + length));
 
             this.entries.push(elems);
         }

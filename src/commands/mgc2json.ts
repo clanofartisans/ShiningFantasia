@@ -50,7 +50,7 @@ function getElementName(ele: number): string {
 // 10 0001 0000 pc
 // 20 0010 0000 mob
 // 40 0002 0000 npc
-// 80 0002 1800 npc
+// 80 0002 1800 npc, excluding fellows
 
 // 0001 pc
 // 0002 npc
@@ -59,7 +59,7 @@ function getElementName(ele: number): string {
 // 0010 mob
 // 0020 door
 // 0040 lift
-// 0080 model
+// 0080 model (furniture, etc.)
 // 0100 pet
 // 0200 self
 // 0400 pvp
@@ -397,7 +397,7 @@ for (let i = 0; i < menuRes.resources.length; i++) {
         const numSpells = Math.floor(res.temp.length / 100);
 
         for (let s = 0; s < numSpells; s++) {
-            const b = res.temp.slice(s * 100, (s + 1) * 100);
+            const b = res.temp.subarray(s * 100, (s + 1) * 100);
 
             const obj: any = {};
 
@@ -419,6 +419,23 @@ for (let i = 0; i < menuRes.resources.length; i++) {
             obj.iconId = b.readInt16LE(0x40);
             obj.icon2Id = b.readInt16LE(0x42);
             obj.modifiers = getModifiers(b.readUInt8(0x44));
+            // 0: 0
+            // 1: 1
+            // 2: 3
+            // 3: 4
+            // 4: 5
+            // 5: 6
+            // 6: 7
+            // 7: 8
+            // 8: 10
+            // 9: 12
+            // 10: 14
+            // 11: 16
+            // 12: 20
+            // 13: 23
+            // 14: 30
+            // 15: 255
+
             // 0h,     1h,     3h,     4h
             // 5h,     6h,     7h,     8h
             // Ah,     Ch,     Eh,    10h

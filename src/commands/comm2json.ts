@@ -120,7 +120,7 @@ for (let i = 0; i < menuRes.resources.length; i++) {
         const numComm = Math.floor(res.temp.length / 48);
 
         for (let s = 0; s < numComm; s++) {
-            const b = res.temp.slice(s * 48, (s + 1) * 48);
+            const b = res.temp.subarray(s * 48, (s + 1) * 48);
 
             const obj: any = {};
 

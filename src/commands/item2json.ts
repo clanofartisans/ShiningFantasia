@@ -287,6 +287,13 @@ const fieldNames = [
     'iconTextureBase64',
 ];
 
+// todo
+// _unk52 - aoeModifier
+// 1: YAGRUSH
+// 2: EPEOLATRY
+// 3: LUZAFS_RING
+// 4: STRING_INSTRUMENT
+
 const itemList = [];
 
 for (let i = 0; i < jItems.entries.length; i++) {

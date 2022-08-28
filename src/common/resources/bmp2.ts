@@ -39,7 +39,7 @@ export class Bmp2 {
         const isCompressed = versionFlags >> 7;
         const version = (versionFlags >> 4) & 7;
 
-        const textureName = b.slice(1, 17);
+        const textureName = b.subarray(1, 17);
 
         const width = lsb32(b, 21);
         const height = lsb32(b, 25);
@@ -118,19 +118,19 @@ export class Bmp2 {
         this.compressedTextureFourCC = fourCC;
 
         if (paletteOffset > 0) {
-            this.palette = b.slice(paletteOffset, paletteOffset + paletteSize);
+            this.palette = b.subarray(paletteOffset, paletteOffset + paletteSize);
         } else {
             this.palette = null;
         }
 
         if (textureOffset > 0) {
-            this.texture = b.slice(textureOffset, textureOffset + textureSize);
+            this.texture = b.subarray(textureOffset, textureOffset + textureSize);
         } else {
             this.texture = null;
         }
 
         if (compressedTextureOffset > 0) {
-            this.compressedTexture = b.slice(compressedTextureOffset, compressedTextureOffset + compressedTextureSize);
+            this.compressedTexture = b.subarray(compressedTextureOffset, compressedTextureOffset + compressedTextureSize);
         } else {
             this.compressedTexture = null;
         }

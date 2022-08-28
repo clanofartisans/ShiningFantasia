@@ -205,7 +205,7 @@ export class Item {
                         // already handled above
                         break;
                     case ItemFieldType.Text:
-                        encodeDmsgEntry(b.slice(offset), value);
+                        encodeDmsgEntry(b.subarray(offset), value);
                         break;
                 }
             }
@@ -215,7 +215,7 @@ export class Item {
     initIcon(b: Buffer, offset: number) {
         const bmp2Length = lsb32(b, 0x280);
         if (bmp2Length > 0) {
-            const iconBuffer = b.slice(0x284, 0x284 + bmp2Length);
+            const iconBuffer = b.subarray(0x284, 0x284 + bmp2Length);
 
             this.iconTexture = new Bmp2(iconBuffer);
             this.iconTextureBase64 = iconBuffer.toString('base64');
@@ -245,7 +245,7 @@ export class ItemType0 extends Item {
         this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
         this.targets = lsb16(b, 0xc);
-        this.text = decodeDmsgEntry(b.slice(0x18));
+        this.text = decodeDmsgEntry(b.subarray(0x18));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk23 = lsb16(b, 0xe);
@@ -277,7 +277,7 @@ export class ItemType0 extends Item {
         b.writeUInt16LE(item.flags!, 4);
         b.writeUInt16LE(item.stack!, 6);
         b.writeUInt16LE(item.targets!, 0xc);
-        encodeDmsgEntry(b.slice(0x18), item.text!);
+        encodeDmsgEntry(b.subarray(0x18), item.text!);
         b.writeUInt8(item._unk15!, 0xbff);
         b.writeUInt16LE(item._unk16!, 0xa);
         b.writeUInt16LE(item._unk23!, 0xe);
@@ -296,7 +296,7 @@ export class ItemType1 extends Item {
         this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
         this.targets = lsb16(b, 0xc);
-        this.text = decodeDmsgEntry(b.slice(0x1c));
+        this.text = decodeDmsgEntry(b.subarray(0x1c));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk21 = lsb16(b, 0xe);
@@ -339,7 +339,7 @@ export class ItemType2 extends Item {
         this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
         this.targets = lsb16(b, 0xc);
-        this.text = decodeDmsgEntry(b.slice(0x18));
+        this.text = decodeDmsgEntry(b.subarray(0x18));
         this.level = lsb16(b, 0x14);
         this.slots = lsb16(b, 0xe);
         this.jobs = lsb32(b, 0x10); // todo - pup-specific
@@ -375,7 +375,7 @@ export class Armor extends Item {
         this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
         this.targets = lsb16(b, 0xc);
-        this.text = decodeDmsgEntry(b.slice(0x2c));
+        this.text = decodeDmsgEntry(b.subarray(0x2c));
         this.level = lsb16(b, 0xe);
         this.slots = lsb16(b, 0x10);
         this.races = lsb16(b, 0x12);
@@ -437,7 +437,7 @@ export class Weapon extends Item {
         this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
         this.targets = lsb16(b, 0xc);
-        this.text = decodeDmsgEntry(b.slice(0x38));
+        this.text = decodeDmsgEntry(b.subarray(0x38));
         this.level = lsb16(b, 0xe);
         this.slots = lsb16(b, 0x10);
         this.races = lsb16(b, 0x12);
@@ -501,7 +501,7 @@ export class Weapon extends Item {
         b.writeUInt16LE(item.flags!, 4);
         b.writeUInt16LE(item.stack!, 6);
         b.writeUInt16LE(item.targets!, 0xc);
-        encodeDmsgEntry(b.slice(0x38), item.text!);
+        encodeDmsgEntry(b.subarray(0x38), item.text!);
         b.writeUInt16LE(item.level!, 0xe);
         b.writeUInt16LE(item.slots!, 0x10);
         b.writeUInt16LE(item.races!, 0x12);
@@ -537,7 +537,7 @@ export class ItemType6 extends Item {
         this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
         this.targets = lsb16(b, 0xc);
-        this.text = decodeDmsgEntry(b.slice(0x54));
+        this.text = decodeDmsgEntry(b.subarray(0x54));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk21 = lsb16(b, 0xe);
@@ -571,7 +571,7 @@ export class ItemType7 extends Item {
         this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
         this.targets = lsb16(b, 0xc);
-        this.text = decodeDmsgEntry(b.slice(0x28));
+        this.text = decodeDmsgEntry(b.subarray(0x28));
         this.level = lsb16(b, 0xe);
         this.slots = lsb16(b, 0x10);
         this.races = lsb16(b, 0x12);
@@ -615,7 +615,7 @@ export class ItemType8 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this.text = decodeDmsgEntry(b.slice(0x20));
+        this.text = decodeDmsgEntry(b.subarray(0x20));
         this._unk15 = lsb8(b, 0xbff);
         this._unk42 = lsb32(b, 4);
         this._unk43 = lsb32(b, 8);
@@ -665,7 +665,7 @@ export class ItemType10 extends Item {
 
         this.kind = lsb16(b, 0x26);
         this.flags = lsb16(b, 4);
-        this.text = decodeDmsgEntry(b.slice(0x70));
+        this.text = decodeDmsgEntry(b.subarray(0x70));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk33 = lsb32(b, 6); // ???
@@ -697,7 +697,7 @@ export class ItemType11 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this.text = decodeDmsgEntry(b.slice(0x238));
+        this.text = decodeDmsgEntry(b.subarray(0x238));
         this._unk15 = lsb8(b, 0xbff);
         this._unk31 = lsb32(b, 8); // ???
         this._unk49 = lsb32(b, 4);
@@ -733,7 +733,7 @@ export class ItemType13 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this.text = decodeDmsgEntry(b.slice(0x108));
+        this.text = decodeDmsgEntry(b.subarray(0x108));
         this._unk15 = lsb8(b, 0xbff);
         this._unk55 = lsb16(b, 4);
         this._unk56 = lsb16(b, 6);
@@ -755,7 +755,7 @@ export class ItemType14 extends Item {
     constructor(id: number, type: ItemType, b: Buffer) {
         super(id, type);
 
-        this.text = decodeDmsgEntry(b.slice(8));
+        this.text = decodeDmsgEntry(b.subarray(8));
         this._unk15 = lsb8(b, 0xbff);
         this._unk53 = lsb8(b, 4);
         this._unk54 = lsb24(b, 5); // ???
@@ -779,7 +779,7 @@ export class Gil extends Item {
         this.flags = lsb16(b, 4);
         this.stack = lsb16(b, 6);
         this.targets = lsb16(b, 0xc);
-        this.text = decodeDmsgEntry(b.slice(0x10));
+        this.text = decodeDmsgEntry(b.subarray(0x10));
         this._unk15 = lsb8(b, 0xbff);
         this._unk16 = lsb16(b, 0xa);
         this._unk32 = lsb16(b, 0xe);
@@ -804,7 +804,7 @@ export class Gil extends Item {
         b.writeUInt16LE(item.flags!, 4);
         b.writeUInt16LE(item.stack!, 6);
         b.writeUInt16LE(item.targets!, 0xc);
-        encodeDmsgEntry(b.slice(0x10), item.text!);
+        encodeDmsgEntry(b.subarray(0x10), item.text!);
         b.writeUInt8(item._unk15!, 0xbff);
         b.writeUInt16LE(item._unk16!, 0xa);
         b.writeUInt16LE(item._unk32!, 0xe);
@@ -920,7 +920,7 @@ export class ItemDatabase extends Resource {
         }
 
         for (let i = 0; i < b.length; i += 0xc00) {
-            const itemBuf = b.slice(i, i + 0xc00);
+            const itemBuf = b.subarray(i, i + 0xc00);
 
             const item = decodeItem(itemBuf);
             this.entries.push(item);
@@ -932,7 +932,7 @@ export function exportDat(items: Item[]): Buffer {
     const b = Buffer.alloc(0xc00 * items.length);
 
     for (let i = 0, j = 0; i < b.length; i += 0xc00, j += 1) {
-        const itemBuf = b.slice(i, i + 0xc00);
+        const itemBuf = b.subarray(i, i + 0xc00);
 
         encodeItem(itemBuf, items[j]);
     }

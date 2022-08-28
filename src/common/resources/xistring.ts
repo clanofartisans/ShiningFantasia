@@ -44,7 +44,7 @@ export class XiString extends Resource {
                 stringLength++;
             }
 
-            const strBuf = b.slice(stringOffset, stringOffset + stringLength);
+            const strBuf = b.subarray(stringOffset, stringOffset + stringLength);
             const s = decodeString(strBuf);
 
             this.entries.push(s);

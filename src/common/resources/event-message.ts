@@ -46,7 +46,7 @@ export class EventMessage extends Resource {
 
             let stringLength = (nextOffset - stringOffset) - 1;
 
-            const strBuf = b.slice(stringOffset, stringOffset + stringLength);
+            const strBuf = b.subarray(stringOffset, stringOffset + stringLength);
             const s = decodeEventString(strBuf);
             this.entries.push(s);
         }

@@ -57,7 +57,7 @@ export class EntityList extends Resource {
 
             const entityId = lsb32(b, stringOffset + stride - 4);
 
-            const strBuf = b.slice(stringOffset, stringOffset + stringLength);
+            const strBuf = b.subarray(stringOffset, stringOffset + stringLength);
             const s = decodeString(strBuf);
 
             this.entries.push({

@@ -33,7 +33,7 @@ export async function loadDmsg(fileId: number): Promise<Dmsg> {
         console.error(`${fileId}: Exception ${e}`);
 
         // print out the first 256 bytes
-        dumpBin(buf.slice(0, 256));
+        dumpBin(buf.subarray(0, 256));
 
         throw e;
     }
@@ -48,7 +48,7 @@ export async function loadEventMessage(fileId: number): Promise<EventMessage> {
         console.error(`${fileId}: Exception ${e}`);
 
         // print out the first 256 bytes
-        dumpBin(buf.slice(0, 256));
+        dumpBin(buf.subarray(0, 256));
 
         throw e;
     }
@@ -91,7 +91,7 @@ export async function loadResource(entry: ResourceEntry): Promise<Resource> {
         console.error(`${fileId}: Exception ${e}`);
 
         // print out the first 256 bytes
-        dumpBin(buf.slice(0, 256));
+        dumpBin(buf.subarray(0, 256));
 
         throw e;
     }
