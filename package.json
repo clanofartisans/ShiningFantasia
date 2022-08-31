@@ -40,6 +40,7 @@
     "dmsg2json": "./build/commands/dmsg2json/index.js",
     "xistring2json": "./build/commands/xistring2json/index.js",
     "mgc2json": "./build/commands/mgc2json/index.js",
+    "json2mgc": "./build/commands/json2mgc/index.js",
     "comm2json": "./build/commands/comm2json/index.js"
   },
   "devDependencies": {

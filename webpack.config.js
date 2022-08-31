@@ -183,11 +183,12 @@ module.exports = function (env, argv) {
         'dmsg2json',
         'xistring2json',
         'mgc2json',
+        'json2mgc',
         'comm2json'].map(c => getTarget({
             production,
             target: 'node',
             entry: {index: `./src/commands/${c}.ts`},
-            output: {path: path.resolve(__dirname, `/build/commands/${c}`)},
+            output: {path: path.resolve(__dirname, `./build/commands/${c}`)},
             tsconfig: path.resolve(__dirname, 'src/commands/tsconfig.json')
         }));
 
