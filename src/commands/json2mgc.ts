@@ -1,6 +1,9 @@
 import { readFileSync, writeFileSync } from 'fs';
 
+import { lsb32 } from '../common/bytes';
 import { encode as encodeMgc_ } from '../common/mgc-decode';
+import { decodeString } from '../common/string';
+import { ChunkedResourceType } from '../common/resources/chunked-resource';
 
 // Lame copy-paste but who cares. :)
 
@@ -610,9 +613,10 @@ function arrayToJobBits(s: string[]): number {
     return bits;
 }
 
-if (process.argv.length !== 5) {
+if (process.argv.length !== 4 && process.argv.length !== 5) {
     console.error('Incorrect command line arguments!');
-    console.error(`usage: ${process.argv[1]} <mgc.json> <BASE 114.DAT> <NEW 114.DAT`);
+    console.error(`usage: ${process.argv[1]} <mgc.json> <BASE 114.DAT> <NEW 114.DAT>`);
+    console.error(`OR: ${process.argv[1]} <mgc.json> <RAW MGC BIN OUTPUT>`);
     console.error(`NOTE: DAT splicing support may be deprecated in the future!`);
     process.exit(1);
 }
@@ -620,8 +624,6 @@ if (process.argv.length !== 5) {
 const jsonData: any = readFileSync(process.argv[2]);
 
 const mgcJson = JSON.parse(jsonData);
-
-const menuDat = readFileSync(process.argv[3]);
 
 const mgc = Buffer.alloc(100 * mgcJson.length);
 
@@ -755,7 +757,54 @@ for (let i = 0; i < mgcJson.length; i++) {
 
 encodeMgc_(mgc, 100);
 
-writeFileSync(process.argv[4], mgc);
+if (process.argv.length === 4) {
+    writeFileSync(process.argv[3], mgc);
+} else {
+    const menuDat = readFileSync(process.argv[3]);
+
+    const chunks: Buffer[] = [];
+
+    let offset = 0;
+    const b = menuDat;
+
+    while (offset <= b.length - 16) {
+        const name = decodeString(b.subarray(offset, offset + 4));
+
+        const header0 = lsb32(b, offset + 4);
+        const header1 = lsb32(b, offset + 8);
+        const header2 = lsb32(b, offset + 12);
+
+        const type = header0 & 0x7f;
+        const length = (((header0 & 0xfffffff) >> 7) << 4) - 16;
+        const flags = (header0 >> 28);
+
+        if (b.length - offset < length + 16) {
+            throw new Error('Corrupt Resource DAT');
+        }
+
+        let resBuf = b.subarray(offset, offset + length + 16);
+        offset += 16;
+        offset += length;
+
+        if (type === ChunkedResourceType.Mgb && name === 'mgc_') {
+            const header = Buffer.alloc(16);
+
+            header[0] = 109;
+            header[1] = 103;
+            header[2] = 99;
+            header[3] = 95;
+
+            header.writeUInt32LE((ChunkedResourceType.Mgb) | (((mgc.length + 16) >> 4) << 7) | (flags << 28), 4);
+            chunks.push(header);
+            chunks.push(mgc);
+        } else {
+            chunks.push(resBuf);
+        }
+    }
+
+    const outBin = Buffer.concat(chunks);
+    writeFileSync(process.argv[4], outBin);
+}
 
 /*
 const menuRes = new ChunkedResource(menuDat);
