@@ -184,7 +184,8 @@ module.exports = function (env, argv) {
         'xistring2json',
         'mgc2json',
         'json2mgc',
-        'comm2json'].map(c => getTarget({
+        'comm2json',
+        'json2comm'].map(c => getTarget({
             production,
             target: 'node',
             entry: {index: `./src/commands/${c}.ts`},
