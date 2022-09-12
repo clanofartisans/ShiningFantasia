@@ -141,6 +141,9 @@ function convertSpecial(orig: number, code: SpecialCode, param: Buffer | never[]
 
         case SpecialCode.NEWLINE:
             return '\\n';
+
+        case SpecialCode.TAB:
+            return '\\t';
     }
 }
 
@@ -175,7 +178,13 @@ function decode(byteTable: number[], table: number[], strBuf: Buffer): string {
         } else if (codePoint > 0) {
             s += String.fromCodePoint(codePoint);
         } else {
-            s += `\\u${c.toString(16).toUpperCase().padStart(bytes * 2, '0')}`;
+            if (bytes === 2) {
+                // \uXXXX
+                s += `\\u${c.toString(16).toUpperCase().padStart(4, '0')}`;
+            } else {
+                // todo - \xAA\xBB\xCC
+                s += `\\u${c.toString(16).toUpperCase().padStart(bytes * 2, '0')}`;
+            }
         }
     }
 
@@ -196,7 +205,7 @@ export function decodeEventString(strBuf: Buffer): string {
     return decode(ShiftJISEventBytes, ShiftJISEventTable, strBuf);
 }
 
-export function encodeString(str: string): Buffer {
+export function encodeString(str: string, isEnglish?: boolean): Buffer {
     // The encoding is kinda Shift_JIS, but has a lot of
     // non-standard bytes.
 
@@ -211,7 +220,9 @@ export function encodeString(str: string): Buffer {
         cp.push(cpStr.codePointAt(0)!);
     }
 
-    const isEnglish = cp.length > 0 && cp[0] < 128;
+    // Try to auto-detect if the parameter was not given.
+    // Only useful when testing by naive file output comparisons.
+    isEnglish = isEnglish ?? (cp.length > 0 && cp[0] < 128);
 
     for (let i = 0; i < cp.length; i++) {
         const c = cp[i]!;
@@ -221,9 +232,16 @@ export function encodeString(str: string): Buffer {
         if (c < 0x80) {
             switch (c) {
                 case 92: // '\'
+                    // '\t'
+                    if (r > 0 && cp[i+1] == 116) {
+                        buf[offset] = 0x09;
+                        offset++;
+                        i++;
+                        continue;
+                    }
                     // '\n'
                     if (r > 0 && cp[i+1] == 110) {
-                        buf[offset] = 0xa;
+                        buf[offset] = 0x0A;
                         offset++;
                         i++;
                         continue;
@@ -237,6 +255,15 @@ export function encodeString(str: string): Buffer {
                         i += 5;
                         continue;
                     }
+                    // '\xxx'
+                    if (r > 4 && cp[i+1] == 120) {
+                        const hex = `${String.fromCodePoint(cp[i+2]!)}${String.fromCodePoint(cp[i+3]!)}`;
+                        const code = parseInt(hex, 16);
+                        buf.writeUInt16BE(code, offset);
+                        offset += 2;
+                        i += 3;
+                        continue;
+                    }
                     break;
             }
 
@@ -247,7 +274,9 @@ export function encodeString(str: string): Buffer {
             let found = false;
             for (let j = 0; j < 65536; j++) {
                 if (ShiftJISTable[j] == c) {
+                    // Fix up ambiguous glyph mappings in the English text
                     if (isEnglish) {
+                        if (c == 0x2019) j = 0x8552;
                         if (c == 0x2026) j = 0x8545;
                     }
                     buf.writeUInt16BE(j, offset);

@@ -39,6 +39,7 @@ export enum SpecialCode {
 	FOUR_DIGIT_VALUE,
 
 	NEWLINE,
+	TAB,
 };
 
 function MakeSpecial(code: SpecialCode, bytes: number): number {
@@ -88,6 +89,7 @@ const ActionHexValue = MakeSpecial(SpecialCode.ACTION_HEX_VALUE, 1);
 const FourDigitValue = MakeSpecial(SpecialCode.FOUR_DIGIT_VALUE, 1);
 
 const Newline = MakeSpecial(SpecialCode.NEWLINE, 0);
+const Tab = MakeSpecial(SpecialCode.TAB, 0);
 
 export const ShiftJISEventTable = [
 	NUL, // 0x00
@@ -34204,7 +34206,7 @@ export const ShiftJISEventTable = [
 	0x0000, // 0x853F
 	0x20AC, // 0x8540
 	0x0000, // 0x8541
-	0x0000, // 0x8542
+	0x201A, // 0x8542
 	0x0000, // 0x8543
 	0x201E, // 0x8544
 	0x2026, // 0x8545
@@ -34219,10 +34221,10 @@ export const ShiftJISEventTable = [
 	0x0000, // 0x854E
 	0x0000, // 0x854F
 	0x0000, // 0x8550
-	0x0000, // 0x8551
-	0x0000, // 0x8552
+	0x2018, // 0x8551
+	0x2019, // 0x8552
 	0x201C, // 0x8553
-	0x0000, // 0x8554
+	0x201D, // 0x8554
 	0x0000, // 0x8555
 	0x0000, // 0x8556
 	0x0000, // 0x8557
@@ -65892,7 +65894,7 @@ export const ShiftJISBytes = ShiftJISEventBytes.slice();
 
 // Undo the event-specific stuff.
 for (let i = 0; i < 0x80; i++) {
-	ShiftJISBytes[1] = 1;
+	ShiftJISBytes[i] = 1;
 }
 
 for (let i = 0; i < 65536; i++) {
@@ -65901,4 +65903,5 @@ for (let i = 0; i < 65536; i++) {
 	}
 }
 
+ShiftJISTable[0x09] = Tab;
 ShiftJISTable[0x0a] = Newline;
