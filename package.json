@@ -43,7 +43,9 @@
     "mgc2json": "./build/commands/mgc2json/index.js",
     "json2mgc": "./build/commands/json2mgc/index.js",
     "comm2json": "./build/commands/comm2json/index.js",
-    "json2comm": "./build/commands/json2comm/index.js"
+    "json2comm": "./build/commands/json2comm/index.js",
+    "merit2json": "./build/commands/merit2json/index.js",
+    "json2merit": "./build/commands/json2merit/index.js"
   },
   "devDependencies": {
     "@babel/types": "^7.18.13",
