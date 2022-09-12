@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 
-import { Dmsg } from '../common/resources/dmsg';
+import { Dmsg, DmsgJsonEntryWithHeader, DmsgJsonLocalizedEntryWithHeader } from '../common/resources/dmsg';
 
 if (process.argv.length !== 4 && process.argv.length !== 5) {
     console.error('Incorrect command line arguments!');
@@ -15,7 +15,11 @@ if (process.argv.length === 5) {
     const jDmsg = new Dmsg(jDat);
     const eDmsg = new Dmsg(eDat);
 
-    const dmsgJson = [];
+    if (jDmsg.encoding != eDmsg.encoding || jDmsg.fixedLength != eDmsg.fixedLength) {
+        console.error(`Encoding/FixedLength mismatch!`);
+    }
+
+    const dmsgJson: DmsgJsonLocalizedEntryWithHeader[] = [];
 
     const numEntries = Math.max(jDmsg.entries.length, eDmsg.entries.length);
 
@@ -30,6 +34,11 @@ if (process.argv.length === 5) {
         })
     }
 
+    if (dmsgJson.length > 0) {
+        dmsgJson[0].encoding = jDmsg.encoding;
+        dmsgJson[0].fixedLength = jDmsg.fixedLength;
+    }
+
     writeFileSync(process.argv[4], JSON.stringify(dmsgJson, null, 4));
 } else {
     // Single-language mode.
@@ -37,7 +46,7 @@ if (process.argv.length === 5) {
 
     const eDmsg = new Dmsg(eDat);
 
-    const dmsgJson = [];
+    const dmsgJson: DmsgJsonEntryWithHeader[] = [];
 
     const numEntries = eDmsg.entries.length;
 
@@ -48,6 +57,11 @@ if (process.argv.length === 5) {
             _id: i,
             text: eEntry,
         })
+    }
+
+    if (dmsgJson.length > 0) {
+        dmsgJson[0].encoding = eDmsg.encoding;
+        dmsgJson[0].fixedLength = eDmsg.fixedLength;
     }
 
     writeFileSync(process.argv[3], JSON.stringify(dmsgJson, null, 4));

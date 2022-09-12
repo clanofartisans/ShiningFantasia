@@ -181,6 +181,7 @@ module.exports = function (env, argv) {
         'item2json',
         'json2item',
         'dmsg2json',
+        'json2dmsg',
         'xistring2json',
         'mgc2json',
         'json2mgc',

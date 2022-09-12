@@ -38,6 +38,7 @@
     "item2json": "./build/commands/item2json/index.js",
     "json2item": "./build/commands/json2item/index.js",
     "dmsg2json": "./build/commands/dmsg2json/index.js",
+    "json2dmsg": "./build/commands/json2dmsg/index.js",
     "xistring2json": "./build/commands/xistring2json/index.js",
     "mgc2json": "./build/commands/mgc2json/index.js",
     "json2mgc": "./build/commands/json2mgc/index.js",
