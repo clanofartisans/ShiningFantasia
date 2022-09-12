@@ -181,9 +181,13 @@ function decode(byteTable: number[], table: number[], strBuf: Buffer): string {
             if (bytes === 2) {
                 // \uXXXX
                 s += `\\u${c.toString(16).toUpperCase().padStart(4, '0')}`;
+            } else if (bytes === 1) {
+                // \xXX
+                s += `\\x${c.toString(16).toUpperCase().padStart(2, '0')}`;
             } else {
                 // todo - \xAA\xBB\xCC
-                s += `\\u${c.toString(16).toUpperCase().padStart(bytes * 2, '0')}`;
+                // not supposed to ever happen, but just in case
+                s += `\\Z${bytes}${c.toString(16).toUpperCase().padStart(bytes * 2, '0')}`;
             }
         }
     }
@@ -256,11 +260,11 @@ export function encodeString(str: string, isEnglish?: boolean): Buffer {
                         continue;
                     }
                     // '\xxx'
-                    if (r > 4 && cp[i+1] == 120) {
+                    if (r > 2 && cp[i+1] == 120) {
                         const hex = `${String.fromCodePoint(cp[i+2]!)}${String.fromCodePoint(cp[i+3]!)}`;
                         const code = parseInt(hex, 16);
-                        buf.writeUInt16BE(code, offset);
-                        offset += 2;
+                        buf.writeUInt8(code, offset);
+                        offset += 1;
                         i += 3;
                         continue;
                     }
@@ -276,6 +280,7 @@ export function encodeString(str: string, isEnglish?: boolean): Buffer {
                 if (ShiftJISTable[j] == c) {
                     // Fix up ambiguous glyph mappings in the English text
                     if (isEnglish) {
+                        if (c == 0x00D7) j = 0x85B6;
                         if (c == 0x2019) j = 0x8552;
                         if (c == 0x2026) j = 0x8545;
                     }
