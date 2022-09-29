@@ -7,7 +7,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const PurgeCSSPlugin = require('purgecss-webpack-plugin');
+const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 
 const { VueLoaderPlugin } = require('vue-loader');
 
