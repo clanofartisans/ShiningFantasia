@@ -44,7 +44,10 @@ export class Bmp2 {
         const width = lsb32(b, 21);
         const height = lsb32(b, 25);
 
+        // bits per pixel in the stored version
         const bitsPerPixel = lsb8(b, 31);
+
+        // actual bits per pixel in the decoded version
         const paletteBitsPerPixel = lsb8(b, 53);
 
         let paletteOffset = 0;
@@ -74,7 +77,7 @@ export class Bmp2 {
 
                 paletteSize = 256 * paletteBitsPerPixel / 8;
             } else {
-                // not supported
+                // not a paletted texture
             }
 
             offset += paletteSize;
@@ -87,9 +90,10 @@ export class Bmp2 {
 
         if (isCompressed && offset < b.length - 4) {
             fourCC = lsb32(b, offset);
-            offset += 4;
 
             if (fourCC >= 0x44585431 && fourCC <= 0x44585435) {
+                offset += 4;
+
                 compressedTextureSize = lsb32(b, offset + 0);
                 UnknownDxt1 = lsb32(b, offset + 4);
                 offset += 8;
@@ -105,6 +109,9 @@ export class Bmp2 {
                 }
 
                 offset += compressedTextureSize;
+            } else {
+                // Not actually compressed; nothing to do.
+                fourCC = 0;
             }
         }
 
@@ -487,42 +494,77 @@ export class Bmp2 {
             return this.decompressTexture();
         }
 
-        // Hardcoded to only support BPP8 PBPP32 for the time being.
-        if (!this.palette) {
-            return null;
-        }
-        if (!this.texture) {
-            return null;
-        }
-        if (this.bitsPerPixel !== 8 || this.paletteBitsPerPixel !== 32) {
-            return null;
-        }
+        if (this.palette) {
+            // Hardcoded to only support BPP8 PBPP32 for the time being.
 
-        const width = this.width;
-        const height = this.height;
-
-        const uncompressedSize = this.paletteBitsPerPixel * width * height / 8;
-        const b =  new Uint8ClampedArray(uncompressedSize);
-
-        let offset = 0;
-
-        // Flip the image
-        for (let y = height - 1; y >= 0; y--) {
-            for (let x = 0; x < width; x++) {
-                const p = this.texture[y * width + x];
-
-                // BGRA -> RGBA
-                b[offset + 0] = this.palette[p * 4 + 2];
-                b[offset + 1] = this.palette[p * 4 + 1];
-                b[offset + 2] = this.palette[p * 4 + 0];
-
-                // rescale alpha for the icon textures
-                b[offset + 3] = this.palette[p * 4 + 3] * 255 / 128;
-
-                offset += 4;
+            if (!this.texture) {
+                return null;
             }
-        }
+            if (this.bitsPerPixel !== 8 || this.paletteBitsPerPixel !== 32) {
+                return null;
+            }
 
-        return b;
+            const width = this.width;
+            const height = this.height;
+
+            const uncompressedSize = this.paletteBitsPerPixel * width * height / 8;
+            const b =  new Uint8ClampedArray(uncompressedSize);
+
+            let offset = 0;
+
+            // Flip the image
+            for (let y = height - 1; y >= 0; y--) {
+                for (let x = 0; x < width; x++) {
+                    const p = this.texture[y * width + x];
+
+                    // BGRA -> RGBA
+                    b[offset + 0] = this.palette[p * 4 + 2];
+                    b[offset + 1] = this.palette[p * 4 + 1];
+                    b[offset + 2] = this.palette[p * 4 + 0];
+
+                    // rescale alpha for the icon textures
+                    b[offset + 3] = this.palette[p * 4 + 3] * 255 / 128;
+
+                    offset += 4;
+                }
+            }
+
+            return b;
+        } else {
+            // Hardcoded to only support BPP32 PBPP32 for the time being.
+
+            if (!this.texture) {
+                return null;
+            }
+
+            if (this.bitsPerPixel !== 32 || this.paletteBitsPerPixel !== 32) {
+                return null;
+            }
+
+            const width = this.width;
+            const height = this.height;
+
+            const uncompressedSize = this.paletteBitsPerPixel * width * height / 8;
+            const b =  new Uint8ClampedArray(uncompressedSize);
+
+            let offset = 0;
+
+            // Flip the image
+            for (let y = height - 1; y >= 0; y--) {
+                for (let x = 0; x < width; x++) {
+                    // BGRA -> RGBA
+                    b[offset + 0] = this.texture[(y * width + x) * 4 + 2];
+                    b[offset + 1] = this.texture[(y * width + x) * 4 + 1];
+                    b[offset + 2] = this.texture[(y * width + x) * 4 + 0];
+
+                    // rescale alpha
+                    b[offset + 3] = this.texture[(y * width + x) * 4 + 3] * 255 / 128;
+
+                    offset += 4;
+                }
+            }
+
+            return b;
+        }
     }
 }
